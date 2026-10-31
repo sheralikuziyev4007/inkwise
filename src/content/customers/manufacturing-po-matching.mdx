@@ -1,0 +1,39 @@
+export const meta = {
+  title: "[COMPANY] matched [N] purchase orders a month without adding headcount",
+  summary:
+    "A mid-sized manufacturer automated purchase-order matching across hundreds of suppliers.",
+  industry: "Manufacturing",
+  documents: "Purchase orders, invoices",
+  stack: "ERP, Data warehouse",
+  teamSize: "[N] employees",
+  stats: [
+    { value: "[STAT]", label: "POs matched automatically" },
+    { value: "[STAT]", label: "suppliers onboarded" },
+    { value: "[STAT]", label: "hours saved per week" },
+  ],
+  sections: ["The challenge", "The rollout", "The results"],
+  publishedAt: "2026-08-21",
+};
+
+## The challenge
+
+[COMPANY] buys components from more than [N] suppliers. Growth meant more purchase orders, and the procurement team was spending most of its week comparing PDFs line by line.
+
+## The rollout
+
+Inkwise was connected to the supplier portal and the ERP. Each incoming invoice was matched against its PO at line level — SKU, quantity and unit price — with tolerances the team defined.
+
+```json
+{
+  "match": "partial",
+  "po_number": "PO-7731",
+  "lines": [{ "sku": "A-40", "ordered": 40, "invoiced": 40, "price_delta": "0.00" }],
+  "action": "auto_approve"
+}
+```
+
+## The results
+
+[Results paragraph — replace with the customer's verified outcome.]
+
+<PullQuote quote="[CUSTOMER QUOTE]" name="[NAME]" role="[ROLE], [COMPANY]" />

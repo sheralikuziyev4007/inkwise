@@ -1,0 +1,30 @@
+export const meta = {
+  title: "How we score confidence for every extracted field",
+  excerpt: "What goes into the number, and why we show it to the people reviewing documents.",
+  category: "Engineering",
+  publishedAt: "2026-09-18",
+  readingMinutes: 7,
+  author: "Inkwise Team",
+  sections: ["Why a score per field", "What goes into it", "How teams use it"],
+};
+
+## Why a score per field
+
+A document-level "95% accurate" hides the one field that matters. A total that is wrong by a digit costs more than a misspelled street name, so Inkwise scores each field separately.
+
+## What goes into it
+
+The score combines several signals:
+
+- how clearly the text was read from the page;
+- whether the value has the expected shape (a date, a currency amount, a tax ID);
+- whether it agrees with other fields — line items should add up to the total;
+- how often this layout and field were corrected in the past.
+
+## How teams use it
+
+Teams set a threshold per field. Above it, values flow straight to the connected systems. Below it, the field goes to the review queue with the source region of the page highlighted, so checking takes seconds.
+
+<Callout title="Corrections feed back">
+  Every correction in the review queue is used to calibrate future scores for that supplier and field.
+</Callout>

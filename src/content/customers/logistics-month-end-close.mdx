@@ -1,0 +1,51 @@
+export const meta = {
+  title: "How [COMPANY] closed the books [X] days faster",
+  summary:
+    "A regional logistics operator replaced manual invoice keying with Inkwise and moved its month-end close forward.",
+  industry: "Logistics",
+  documents: "Invoices, delivery notes",
+  stack: "ERP, Accounting",
+  teamSize: "[N] employees",
+  stats: [
+    { value: "[STAT]", label: "less manual data entry" },
+    { value: "[STAT]", label: "invoices processed per month" },
+    { value: "[STAT]", label: "days faster month-end close" },
+  ],
+  sections: ["The challenge", "The rollout", "The results"],
+  publishedAt: "2026-10-02",
+  featured: true,
+};
+
+## The challenge
+
+[COMPANY] moves freight for retailers across [REGION]. Every carrier, fuel supplier and warehouse partner sends invoices in its own format — PDFs by email, scans from depots, the occasional photo of a paper slip.
+
+A finance team of [N] people keyed every one of them into the ERP by hand. Month-end close waited on the last stragglers, and mismatches between delivery notes and invoices were usually found weeks later.
+
+<PullQuote
+  quote="[CUSTOMER QUOTE — what month-end looked like before Inkwise.]"
+  name="[NAME]"
+  role="[ROLE], [COMPANY]"
+/>
+
+## The rollout
+
+The team started with a single shared mailbox. Inkwise read every attachment, extracted vendor, totals, tax and line items, and matched each invoice to its delivery note.
+
+<Timeline
+  items={[
+    { when: "Week 1", what: "Accounts-payable mailbox connected, first 200 invoices processed" },
+    { when: "Week 2", what: "Matching rules for delivery notes and tolerances switched on" },
+    { when: "Week 4", what: "Full volume live; review queue only for exceptions" },
+  ]}
+/>
+
+Low-confidence fields went to a review queue instead of the ERP. Corrections made there were fed back, so the same vendor layout rarely needed a second look.
+
+## The results
+
+[Results paragraph — what changed in numbers and in the team's day-to-day work. Replace placeholders with the customer's verified figures.]
+
+<Callout title="What made the difference">
+  Matching invoices to delivery notes before posting meant disputes were raised with carriers while the shipment was still fresh.
+</Callout>

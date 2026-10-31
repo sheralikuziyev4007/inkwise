@@ -1,0 +1,52 @@
+export const meta = {
+  title: "Three-way matching, explained without the jargon",
+  excerpt:
+    "How invoices, purchase orders and delivery notes are checked against each other — and where automation actually helps.",
+  category: "Guides",
+  publishedAt: "2026-10-14",
+  readingMinutes: 6,
+  author: "Inkwise Team",
+  sections: ["What gets matched", "Where it breaks", "Automating it", "Checklist"],
+  featured: true,
+};
+
+## What gets matched
+
+Three-way matching compares three documents before a bill is paid: the **purchase order** (what was ordered), the **delivery note** or goods receipt (what arrived) and the **invoice** (what is being charged).
+
+If all three agree on supplier, items, quantities and prices, the invoice can be approved. If they disagree, someone needs to look before money leaves the account.
+
+<Callout title="Tolerances matter">
+  A match rarely has to be exact. Most teams allow a small tolerance on price and quantity, so rounding and freight adjustments don't block every invoice.
+</Callout>
+
+## Where it breaks
+
+Manual matching usually fails in the same few places:
+
+- **Partial deliveries.** Forty units were ordered, thirty-six arrived, forty were invoiced.
+- **Units of measure.** The PO says boxes, the invoice says pieces.
+- **Missing references.** The invoice has no PO number, so someone has to search for it.
+- **Duplicate invoices.** The same bill arrives by email and by post.
+
+## Automating it
+
+Automation helps most when it reads the documents reliably and leaves judgement to people. A typical flow extracts the fields, matches line by line, approves clean matches and routes everything else to a named owner.
+
+```json
+{
+  "match": "partial",
+  "po_number": "PO-7731",
+  "lines": [{ "sku": "A-40", "ordered": 40, "received": 36, "invoiced": 40 }],
+  "action": "route_to_review"
+}
+```
+
+The key is that a person sees *why* a document was flagged, with the three values side by side.
+
+## Checklist
+
+1. Every invoice should reference a PO number — ask suppliers to include it.
+2. Write tolerances down instead of relying on tribal knowledge.
+3. Give every exception type a named owner.
+4. Review the exceptions monthly: the same supplier showing up again is a process problem, not a data problem.
