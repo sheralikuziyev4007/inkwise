@@ -6,9 +6,11 @@ import { SplitReveal } from "@/components/motion/split-reveal";
 import { PostCard } from "@/components/sections/blog/post-card";
 import { ReadingProgress } from "@/components/sections/blog/reading-progress";
 import { TableOfContents } from "@/components/sections/customers/table-of-contents";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
 import { formatDate } from "@/lib/content/format";
 import { getPost, getPosts, getPostSlugs } from "@/lib/content/loaders";
+import { articleJsonLd } from "@/lib/structured-data";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -47,6 +49,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={articleJsonLd(slug, meta)} />
       <ReadingProgress targetId="article-body" />
       <article>
         <Container as="header" className="flex max-w-4xl flex-col gap-6 pt-16 pb-12 sm:pt-20">

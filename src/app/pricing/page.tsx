@@ -5,7 +5,9 @@ import { PricingFaq } from "@/components/sections/pricing/pricing-faq";
 import { PricingPlans } from "@/components/sections/pricing/pricing-plans";
 import { CtaBanner } from "@/components/sections/shared/cta-banner";
 import { PageHero } from "@/components/sections/shared/page-hero";
+import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/ui/container";
+import { faqJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -17,6 +19,7 @@ export const metadata: Metadata = {
 export default function PricingPage() {
   return (
     <>
+      <JsonLd data={faqJsonLd()} />
       <PageHero
         align="center"
         title={
