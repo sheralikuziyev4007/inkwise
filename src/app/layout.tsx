@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { SkipLink } from "@/components/layout/skip-link";
+import { MotionProviders } from "@/components/motion/motion-providers";
 
 export const metadata: Metadata = {
   title: "Inkwise",
@@ -32,12 +33,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: motionScript }} />
       </head>
       <body>
-        <SkipLink />
-        <Header />
-        <main id="main" tabIndex={-1} className="outline-none">
-          {children}
-        </main>
-        <Footer />
+        <MotionProviders>
+          <SkipLink />
+          <Header />
+          <main id="main" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
+          <Footer />
+        </MotionProviders>
       </body>
     </html>
   );

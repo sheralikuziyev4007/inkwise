@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { useLenis } from "@/components/motion/smooth-scroll";
 import { ButtonLink } from "@/components/ui/button";
 import { CrossIcon, MenuIcon } from "@/components/ui/icons";
 import { Logo } from "@/components/ui/logo";
@@ -20,6 +21,7 @@ export function MobileMenu() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const lenis = useLenis();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -27,10 +29,13 @@ export function MobileMenu() {
     if (open && !dialog.open) dialog.showModal();
     if (!open && dialog.open) dialog.close();
     document.documentElement.style.overflow = open ? "hidden" : "";
+    if (open) lenis?.stop();
+    else lenis?.start();
     return () => {
       document.documentElement.style.overflow = "";
+      lenis?.start();
     };
-  }, [open]);
+  }, [open, lenis]);
 
   // Close after navigating.
   useEffect(() => {
