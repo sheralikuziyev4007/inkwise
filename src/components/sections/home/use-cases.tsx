@@ -1,9 +1,5 @@
-"use client";
-
-import { useRef } from "react";
-
+import { MotionScene } from "@/components/motion/motion-scene";
 import { cn } from "@/lib/cn";
-import { useMotion } from "@/lib/motion/use-motion";
 
 const cases = [
   {
@@ -47,36 +43,9 @@ const toneClass: Record<(typeof cases)[number]["tone"], string> = {
  * keyboard-scrollable row with scroll-snap.
  */
 export function UseCases() {
-  const root = useRef<HTMLElement>(null);
-
-  useMotion(root, ({ gsap, conditions: { motionOk, desktop } }) => {
-    const el = root.current;
-    if (!el) return;
-    const q = gsap.utils.selector(el);
-    const viewport = q<HTMLElement>("[data-track-viewport]")[0];
-    const track = q<HTMLElement>("[data-track]")[0];
-    if (!motionOk || !desktop || !viewport || !track) return;
-
-    gsap.set(viewport, { overflow: "visible" });
-    const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-
-    gsap.to(track, {
-      x: () => -distance(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: q("[data-hpin]")[0],
-        start: "center center",
-        end: () => `+=${distance()}`,
-        pin: true,
-        scrub: 0.6,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-      },
-    });
-  });
-
   return (
-    <section ref={root} aria-labelledby="uc-title" className="overflow-x-clip py-24">
+    <section id="use-cases" aria-labelledby="uc-title" className="overflow-x-clip py-24">
+      <MotionScene scene="useCases" target="use-cases" />
       <div data-hpin>
         <div className="mx-auto mb-10 flex w-full max-w-7xl flex-wrap items-end justify-between gap-6 px-5 sm:px-8">
           <h2 id="uc-title" className="h-section m-0">

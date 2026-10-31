@@ -40,7 +40,7 @@ export function ProblemSolution() {
             className="flex flex-col gap-6 rounded-[var(--radius-card)] border border-line bg-sheet p-8 sm:p-9"
           >
             <h3 className="eyebrow m-0 font-normal text-ink-3">Before · manual</h3>
-            <StrikeList items={before} />
+            <StrikeList id="before-list" items={before} />
           </div>
           <div
             data-reveal-item

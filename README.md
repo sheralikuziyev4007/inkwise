@@ -90,12 +90,12 @@ src/
 │   ├── ui/                 # Design-system primitives: Button, Accordion, form fields, icons…
 │   ├── layout/             # Header, mobile menu, footer, skip link
 │   ├── sections/           # Page sections, grouped by page (home, pricing, blog…)
-│   ├── motion/             # SmoothScroll, PageTransition, WordReveal, SplitReveal, Reveal
+│   ├── motion/             # MotionScene, SmoothScroll, PageTransition, WordReveal, SplitReveal, Reveal
 │   ├── mdx/                # Components available inside MDX
 │   └── seo/                # JSON-LD renderer
 ├── content/                # MDX: blog posts and customer stories
 ├── lib/
-│   ├── motion/             # GSAP loader, useMotion hook, split utilities, media queries
+│   ├── motion/             # GSAP loader, useMotion hook, scenes, split utilities, media queries
 │   ├── content/            # Typed MDX loaders, slugify, date formatting
 │   ├── pricing.ts          # Plans, comparison data and price helpers
 │   └── contact-schema.ts   # Zod schema + fake submit
@@ -110,6 +110,7 @@ docs/screenshots/           # README media
 - **One strong motion moment, the rest restrained.** The hero tells the product story in about 2.4 seconds. Elsewhere, motion only supports reading: quiet fade-ups, one pinned story, one horizontal section.
 - **Animation never blocks content.** Headlines are split on the server and animated with CSS from the first paint, so the largest contentful paint is not held back by JavaScript. GSAP and ScrollTrigger are code-split and loaded right after mount (hero) or when the browser is idle (below the fold).
 - **Leak-free route changes.** Every animation goes through one hook, `useMotion`, which runs inside `gsap.context()` + `gsap.matchMedia()` scoped to its component. Unmounting (or a breakpoint or motion-preference change) reverts all tweens, ScrollTriggers and pin spacers. An e2e test navigates between routes and asserts that no pin spacers or runtime errors remain.
+- **Server Components for markup, tiny controllers for motion.** Animated home sections stay Server Components; a render-less `<MotionScene scene="howItWorks" target="how-it-works" />` attaches the matching setup from `lib/motion/scenes.ts`. React doesn't ship or run component code for the section markup itself.
 - **Reduced motion is a first-class path.** An inline script adds `motion-ok` to `<html>` only when motion is allowed. Every pre-hidden state is scoped to that class, with a CSS fallback that reveals content if JavaScript never runs.
 - **Native platform first.** The mobile menu uses `<dialog>` (focus trap and Escape for free), the accordion uses ARIA disclosure buttons with CSS grid-row height easing, toggles use `aria-pressed`, and tables keep sticky row headers inside a focusable scroll region.
 - **Content as data.** MDX files export a typed `meta` object, so list pages, tables of contents, OG images, sitemap entries and JSON-LD are all generated from the same source.

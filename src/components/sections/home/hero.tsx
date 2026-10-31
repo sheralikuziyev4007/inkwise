@@ -1,12 +1,11 @@
-"use client";
+import type { CSSProperties } from "react";
 
-import { useEffect, useRef, type CSSProperties } from "react";
-
+import { HeroConnectors } from "@/components/motion/hero-connectors";
+import { MotionScene } from "@/components/motion/motion-scene";
 import { WordReveal } from "@/components/motion/word-reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { CheckIcon } from "@/components/ui/icons";
-import { useMotion } from "@/lib/motion/use-motion";
 
 const extracted = [
   { key: "invoice_no", value: "INV-20418" },
@@ -24,122 +23,16 @@ const lines = [
   { item: "Freight", amount: "1,600.00" },
 ];
 
-/** Field indexes (in DOM order) that get a connector to the Extracted panel. */
-const CONNECTED_FIELDS = [0, 1, 3];
-
-/**
- * Draws each connector across the gap between the document and the panel,
- * level with its highlighted field.
- */
-function layoutConnectors(stage: HTMLElement) {
-  const fields = stage.querySelectorAll<HTMLElement>("[data-field]");
-  const connectors = stage.querySelectorAll<HTMLElement>("[data-connector]");
-  const panel = stage.querySelector<HTMLElement>("[data-panel]");
-  const doc = stage.querySelector<HTMLElement>("[data-doc]");
-  if (!panel || !doc) return;
-  const base = stage.getBoundingClientRect();
-  const panelLeft = panel.getBoundingClientRect().left - base.left;
-  const docRight = doc.getBoundingClientRect().right - base.left;
-  connectors.forEach((line, i) => {
-    const field = fields[CONNECTED_FIELDS[i] ?? -1];
-    if (!field) return;
-    const r = field.getBoundingClientRect();
-    const left = docRight + 4;
-    const width = Math.max(0, panelLeft - left - 6);
-    line.style.left = `${left}px`;
-    line.style.top = `${r.top - base.top + r.height / 2}px`;
-    line.style.width = `${width}px`;
-    line.style.display = width < 8 ? "none" : "";
-  });
-}
-
 /**
  * The page's one big motion moment: the headline rises in, a highlighter
  * "scan bar" sweeps the invoice, fields light up and fly into the
  * Extracted panel, then a Synced chip pops. Plays once (~2.4s).
  */
 export function Hero() {
-  const root = useRef<HTMLElement>(null);
-
-  // Connectors are measured, so they stay aligned at any width (no GSAP needed).
-  useEffect(() => {
-    const stage = root.current?.querySelector<HTMLElement>("[data-hero-stage]");
-    if (!stage) return;
-    const mql = window.matchMedia("(min-width: 1024px)");
-    let observer: ResizeObserver | null = null;
-    const sync = () => {
-      observer?.disconnect();
-      observer = null;
-      if (!mql.matches) return;
-      const relayout = () => layoutConnectors(stage);
-      relayout();
-      observer = new ResizeObserver(relayout);
-      observer.observe(stage);
-      void document.fonts?.ready.then(relayout);
-    };
-    sync();
-    mql.addEventListener("change", sync);
-    return () => {
-      mql.removeEventListener("change", sync);
-      observer?.disconnect();
-    };
-  }, []);
-
-  useMotion(
-    root,
-    ({ gsap, conditions }) => {
-      const el = root.current;
-      if (!el) return;
-      const q = gsap.utils.selector(el);
-
-      const { motionOk, desktop } = conditions;
-      const stage = q<HTMLElement>("[data-hero-stage]")[0];
-      if (!stage) return;
-
-      if (!motionOk) {
-        gsap.set(stage, { visibility: "visible" });
-        return;
-      }
-
-      // Headline words rise via CSS from the first paint (WordReveal);
-      // the document stage is choreographed here once JavaScript is ready.
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      tl.set(stage, { visibility: "visible" })
-        .from(q("[data-doc]"), { y: 24, rotate: 0, autoAlpha: 0, duration: 0.6 }, 0)
-        .from(q("[data-panel]"), { x: 24, autoAlpha: 0, duration: 0.6 }, 0.15)
-        .from(q("[data-row]"), { autoAlpha: 0, x: -8, duration: 0.3, stagger: 0.1 }, 0.9)
-        .fromTo(
-          q("[data-scan]"),
-          { autoAlpha: 1, top: "8%" },
-          { top: "92%", duration: 1.2, ease: "none" },
-          0.55,
-        )
-        .to(q("[data-scan]"), { autoAlpha: 0, duration: 0.25 }, ">-0.05")
-        .from(
-          q("[data-field]"),
-          { backgroundColor: "rgba(198,244,50,0)", duration: 0.25, stagger: 0.22 },
-          0.65,
-        )
-        .from(
-          q("[data-sync]"),
-          { scale: 0.6, autoAlpha: 0, duration: 0.45, ease: "back.out(2)" },
-          ">-0.1",
-        );
-
-      if (desktop) {
-        tl.from(
-          q("[data-connector]"),
-          { scaleX: 0, duration: 0.35, stagger: 0.25, ease: "power2.inOut" },
-          0.75,
-        );
-      }
-    },
-    { when: "now" },
-  );
-
   return (
-    <section ref={root} aria-labelledby="hero-title" className="overflow-x-clip">
+    <section id="hero" aria-labelledby="hero-title" className="overflow-x-clip">
+      <MotionScene scene="hero" target="hero" when="now" />
+      <HeroConnectors target="hero" />
       <Container className="flex flex-col gap-12 pt-14 pb-14 sm:pt-20 lg:flex-row lg:items-center lg:gap-12">
         <div className="flex min-w-0 flex-1 flex-col gap-7 lg:basis-[48%]">
           <p
