@@ -1,11 +1,25 @@
-import { Container } from "@/components/ui/container";
+import { CtaBanner } from "@/components/sections/shared/cta-banner";
+import { Hero } from "@/components/sections/home/hero";
+import { HowItWorks } from "@/components/sections/home/how-it-works";
+import { Integrations } from "@/components/sections/home/integrations";
+import { LogoStrip } from "@/components/sections/home/logo-strip";
+import { PricingPreview } from "@/components/sections/home/pricing-preview";
+import { ProblemSolution } from "@/components/sections/home/problem-solution";
+import { Testimonials } from "@/components/sections/home/testimonials";
+import { UseCases } from "@/components/sections/home/use-cases";
 
 export default function HomePage() {
   return (
-    <Container className="py-24">
-      <h1 className="h-display text-6xl">
-        Paperwork in. <span className="marker">Clean data</span> out.
-      </h1>
-    </Container>
+    <>
+      <Hero />
+      <LogoStrip />
+      <ProblemSolution />
+      <HowItWorks />
+      <UseCases />
+      <Integrations />
+      <Testimonials />
+      <PricingPreview />
+      <CtaBanner />
+    </>
   );
 }
