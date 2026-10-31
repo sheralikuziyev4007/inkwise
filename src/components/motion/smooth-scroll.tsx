@@ -5,7 +5,8 @@ import "lenis/dist/lenis.css";
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
-import { gsap, ScrollTrigger } from "@/lib/motion/gsap";
+import { onGsapReady, type GsapBundle } from "@/lib/motion/gsap";
+import { onIdle } from "@/lib/motion/idle";
 import { MEDIA } from "@/lib/motion/media";
 
 const LenisContext = createContext<Lenis | null>(null);
@@ -28,34 +29,54 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     const mql = window.matchMedia(MEDIA.reduced);
     let instance: Lenis | null = null;
-    let tick: ((time: number) => void) | null = null;
+    let cancelIdle = () => {};
+    let cancelReady = () => {};
+    let unlinkGsap = () => {};
 
-    const start = () => {
-      instance = new Lenis({ lerp: 0.12, anchors: { offset: -88 }, autoRaf: false });
-      instance.on("scroll", ScrollTrigger.update);
-      tick = (time: number) => instance?.raf(time * 1000);
+    // When GSAP is (lazily) loaded, drive Lenis from GSAP's ticker so Lenis and
+    // ScrollTrigger share one frame loop. Until then Lenis runs its own rAF.
+    const linkGsap = ({ gsap, ScrollTrigger }: GsapBundle) => {
+      const lenisInstance = instance;
+      if (!lenisInstance) return;
+      lenisInstance.options.autoRaf = false;
+      const tick = (time: number) => lenisInstance.raf(time * 1000);
+      const off = lenisInstance.on("scroll", ScrollTrigger.update);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
+      unlinkGsap = () => {
+        off();
+        gsap.ticker.remove(tick);
+      };
+    };
+
+    const start = () => {
+      instance = new Lenis({ lerp: 0.12, anchors: { offset: -88 }, autoRaf: true });
       setLenis(instance);
+      cancelReady = onGsapReady(linkGsap);
     };
 
     const stop = () => {
-      if (tick) gsap.ticker.remove(tick);
+      cancelIdle();
+      cancelReady();
+      unlinkGsap();
+      unlinkGsap = () => {};
       instance?.destroy();
       instance = null;
-      tick = null;
       setLenis(null);
     };
 
     const sync = () => {
       stop();
-      if (!mql.matches) start();
+      // Smooth scrolling is a nicety: start it once hydration work is done.
+      if (!mql.matches) cancelIdle = onIdle(start);
     };
 
     sync();
     mql.addEventListener("change", sync);
     // Layout can shift once web fonts arrive; recalculate trigger positions.
-    void document.fonts?.ready.then(() => ScrollTrigger.refresh());
+    void document.fonts?.ready.then(() =>
+      onGsapReady(({ ScrollTrigger }) => ScrollTrigger.refresh()),
+    );
 
     return () => {
       mql.removeEventListener("change", sync);
@@ -73,8 +94,14 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
       else window.scrollTo(0, 0);
     }
-    const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => window.cancelAnimationFrame(id);
+    let cancelReady = () => {};
+    const id = window.requestAnimationFrame(() => {
+      cancelReady = onGsapReady(({ ScrollTrigger }) => ScrollTrigger.refresh());
+    });
+    return () => {
+      window.cancelAnimationFrame(id);
+      cancelReady();
+    };
   }, [pathname, lenis]);
 
   return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>;

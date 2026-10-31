@@ -24,9 +24,9 @@
   --color-error: #b42318;
   --color-error-soft: #fdecea;
 
-  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
   --radius-card: 22px;
   --radius-tile: 16px;
@@ -191,5 +191,69 @@ html.motion-ok [data-hero-reveal] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Word reveal (server-split headings, CSS-animated on first paint)
+------------------------------------------------------------------- */
+.word-mask {
+  display: inline-block;
+  overflow: clip;
+  vertical-align: top;
+  /* Room for descenders and the marker background. */
+  padding-block: 0.08em;
+  margin-block: -0.08em;
+}
+
+.word {
+  display: inline-block;
+}
+
+html.motion-ok .word {
+  animation: word-rise 0.9s var(--ease-out-expo) both;
+  animation-delay: calc(var(--d, 0s) + var(--i, 0) * 60ms);
+}
+
+html.motion-ok [data-fade-up] {
+  animation: fade-up 0.6s var(--ease-out-expo) both;
+  animation-delay: var(--d, 0.35s);
+}
+
+@keyframes word-rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+/* Page transition: ink panel wipes up after client-side navigation. */
+.page-wipe {
+  display: none;
+}
+
+html.motion-ok .page-wipe {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: var(--color-ink);
+  transform: translateY(-100%);
+  animation: page-wipe 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.05s backwards;
+}
+
+@keyframes page-wipe {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
   }
 }

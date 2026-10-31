@@ -15,8 +15,7 @@ import {
   UsersIcon,
 } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
-import { gsap, useGSAP } from "@/lib/motion/gsap";
-import { MOTION_CONDITIONS } from "@/lib/motion/media";
+import { useMotion } from "@/lib/motion/use-motion";
 
 interface Integration {
   name: string;
@@ -81,21 +80,24 @@ export function Integrations() {
   const preview = useRef<HTMLDivElement>(null);
   const current = integrations[active] ?? integrations[0]!;
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_CONDITIONS, (context) => {
-        const { motionOk } = context.conditions as { motionOk: boolean };
-        if (!motionOk || !preview.current) return;
-        gsap.from(preview.current.querySelectorAll("[data-chip]"), {
-          autoAlpha: 0,
-          y: 6,
-          duration: 0.3,
-          stagger: 0.04,
-        });
+  const firstRender = useRef(true);
+  useMotion(
+    preview,
+    ({ gsap, conditions: { motionOk } }) => {
+      // Animate chips only when the selection changes, not on page load.
+      if (firstRender.current) {
+        firstRender.current = false;
+        return;
+      }
+      if (!motionOk || !preview.current) return;
+      gsap.from(preview.current.querySelectorAll("[data-chip]"), {
+        autoAlpha: 0,
+        y: 6,
+        duration: 0.3,
+        stagger: 0.04,
       });
     },
-    { dependencies: [active], revertOnUpdate: true },
+    { when: "now", deps: [active] },
   );
 
   return (

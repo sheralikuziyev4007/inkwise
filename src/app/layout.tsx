@@ -1,6 +1,3 @@
-import "@fontsource-variable/bricolage-grotesque";
-import "@fontsource-variable/inter";
-import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
 
 import type { Metadata, Viewport } from "next";
@@ -13,6 +10,8 @@ import { MotionProviders } from "@/components/motion/motion-providers";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/lib/site";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
+
+import { fontDisplay, fontMono, fontSans } from "./fonts";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -52,7 +51,11 @@ const motionScript = `try{if(!window.matchMedia('(prefers-reduced-motion: reduce
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable}`}
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: motionScript }} />
         <JsonLd data={organizationJsonLd()} />

@@ -3,8 +3,7 @@
 import { useRef } from "react";
 
 import { cn } from "@/lib/cn";
-import { gsap, useGSAP } from "@/lib/motion/gsap";
-import { MOTION_CONDITIONS } from "@/lib/motion/media";
+import { useMotion } from "@/lib/motion/use-motion";
 
 const cases = [
   {
@@ -50,39 +49,31 @@ const toneClass: Record<(typeof cases)[number]["tone"], string> = {
 export function UseCases() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const el = root.current;
-      if (!el) return;
-      const q = gsap.utils.selector(el);
-      const mm = gsap.matchMedia();
+  useMotion(root, ({ gsap, conditions: { motionOk, desktop } }) => {
+    const el = root.current;
+    if (!el) return;
+    const q = gsap.utils.selector(el);
+    const viewport = q<HTMLElement>("[data-track-viewport]")[0];
+    const track = q<HTMLElement>("[data-track]")[0];
+    if (!motionOk || !desktop || !viewport || !track) return;
 
-      mm.add(MOTION_CONDITIONS, (context) => {
-        const { motionOk, desktop } = context.conditions as { motionOk: boolean; desktop: boolean };
-        const viewport = q<HTMLElement>("[data-track-viewport]")[0];
-        const track = q<HTMLElement>("[data-track]")[0];
-        if (!motionOk || !desktop || !viewport || !track) return;
+    gsap.set(viewport, { overflow: "visible" });
+    const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
 
-        gsap.set(viewport, { overflow: "visible" });
-        const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-
-        gsap.to(track, {
-          x: () => -distance(),
-          ease: "none",
-          scrollTrigger: {
-            trigger: q("[data-hpin]")[0],
-            start: "center center",
-            end: () => `+=${distance()}`,
-            pin: true,
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-            anticipatePin: 1,
-          },
-        });
-      });
-    },
-    { scope: root },
-  );
+    gsap.to(track, {
+      x: () => -distance(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: q("[data-hpin]")[0],
+        start: "center center",
+        end: () => `+=${distance()}`,
+        pin: true,
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+      },
+    });
+  });
 
   return (
     <section ref={root} aria-labelledby="uc-title" className="overflow-x-clip py-24">

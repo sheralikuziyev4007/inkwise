@@ -4,8 +4,7 @@ import { useRef } from "react";
 
 import { Container } from "@/components/ui/container";
 import { CheckIcon } from "@/components/ui/icons";
-import { gsap, useGSAP } from "@/lib/motion/gsap";
-import { MOTION_CONDITIONS } from "@/lib/motion/media";
+import { useMotion } from "@/lib/motion/use-motion";
 
 const steps = [
   {
@@ -42,86 +41,78 @@ const statuses = ["Waiting for documents", "Extracting · 4 fields", "Validated 
 export function HowItWorks() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const el = root.current;
-      if (!el) return;
-      const q = gsap.utils.selector(el);
-      const mm = gsap.matchMedia();
+  useMotion(root, ({ gsap, conditions: { motionOk, desktop } }) => {
+    const el = root.current;
+    if (!el) return;
+    const q = gsap.utils.selector(el);
+    if (!motionOk) return;
 
-      mm.add(MOTION_CONDITIONS, (context) => {
-        const { motionOk, desktop } = context.conditions as { motionOk: boolean; desktop: boolean };
-        if (!motionOk) return;
-
-        if (!desktop) {
-          gsap.from(q("[data-step]"), {
-            autoAlpha: 0,
-            y: 20,
-            stagger: 0.12,
-            scrollTrigger: { trigger: q("[data-steps]")[0], start: "top 80%" },
-          });
-          return;
-        }
-
-        const stepEls = q<HTMLElement>("[data-step]");
-        const statusEls = q<HTMLElement>("[data-status]");
-        const fieldEls = q<HTMLElement>("[data-how-field]");
-        const checks = q<HTMLElement>("[data-how-check]");
-
-        gsap.set(stepEls.slice(1), { opacity: 0.35 });
-        gsap.set(fieldEls, { autoAlpha: 0, scale: 0.94 });
-        gsap.set(checks, { autoAlpha: 0, scale: 0.4 });
-        gsap.set(statusEls[0] ?? [], { autoAlpha: 1 });
-        gsap.set(statusEls.slice(1), { autoAlpha: 0, y: 8 });
-        gsap.set(q("[data-progress]"), { scaleY: 1 / 3 });
-
-        const counter = q<HTMLElement>("[data-step-counter]")[0];
-        let current = 0;
-        const syncCounter = (progress: number) => {
-          const step = progress < 0.2 ? 1 : progress < 0.6 ? 2 : 3;
-          if (counter && step !== current) {
-            current = step;
-            counter.textContent = `0${step}`;
-          }
-        };
-        syncCounter(0);
-
-        const tl = gsap.timeline({
-          defaults: { ease: "power2.out", duration: 0.5 },
-          onUpdate: () => syncCounter(tl.progress()),
-          scrollTrigger: {
-            trigger: q("[data-pin]")[0],
-            start: "center center",
-            end: "+=1800",
-            pin: true,
-            scrub: 0.6,
-            anticipatePin: 1,
-          },
-        });
-
-        tl.addLabel("extract", 0.4)
-          .to(stepEls[0] ?? [], { opacity: 0.35 }, "extract")
-          .to(stepEls[1] ?? [], { opacity: 1 }, "extract")
-          .to(statusEls[0] ?? [], { autoAlpha: 0, y: -8 }, "extract")
-          .to(statusEls[1] ?? [], { autoAlpha: 1, y: 0 }, "extract")
-          .to(q("[data-progress]"), { scaleY: 2 / 3 }, "extract")
-          .to(fieldEls, { autoAlpha: 1, scale: 1, stagger: 0.2 }, "extract+=0.1")
-          .addLabel("sync", "+=0.5")
-          .to(stepEls[1] ?? [], { opacity: 0.35 }, "sync")
-          .to(stepEls[2] ?? [], { opacity: 1 }, "sync")
-          .to(statusEls[1] ?? [], { autoAlpha: 0, y: -8 }, "sync")
-          .to(statusEls[2] ?? [], { autoAlpha: 1, y: 0 }, "sync")
-          .to(q("[data-progress]"), { scaleY: 1 }, "sync")
-          .to(checks, { autoAlpha: 1, scale: 1, stagger: 0.1, ease: "back.out(2)" }, "sync+=0.1")
-          .to({}, { duration: 0.4 });
-
-        return () => {
-          if (counter) counter.textContent = "03";
-        };
+    if (!desktop) {
+      gsap.from(q("[data-step]"), {
+        autoAlpha: 0,
+        y: 20,
+        stagger: 0.12,
+        scrollTrigger: { trigger: q("[data-steps]")[0], start: "top 80%" },
       });
-    },
-    { scope: root },
-  );
+      return;
+    }
+
+    const stepEls = q<HTMLElement>("[data-step]");
+    const statusEls = q<HTMLElement>("[data-status]");
+    const fieldEls = q<HTMLElement>("[data-how-field]");
+    const checks = q<HTMLElement>("[data-how-check]");
+
+    gsap.set(stepEls.slice(1), { opacity: 0.6 });
+    gsap.set(fieldEls, { autoAlpha: 0, scale: 0.94 });
+    gsap.set(checks, { autoAlpha: 0, scale: 0.4 });
+    gsap.set(statusEls[0] ?? [], { autoAlpha: 1 });
+    gsap.set(statusEls.slice(1), { autoAlpha: 0, y: 8 });
+    gsap.set(q("[data-progress]"), { scaleY: 1 / 3 });
+
+    const counter = q<HTMLElement>("[data-step-counter]")[0];
+    let current = 0;
+    const syncCounter = (progress: number) => {
+      const step = progress < 0.2 ? 1 : progress < 0.6 ? 2 : 3;
+      if (counter && step !== current) {
+        current = step;
+        counter.textContent = `0${step}`;
+      }
+    };
+    syncCounter(0);
+
+    const tl = gsap.timeline({
+      defaults: { ease: "power2.out", duration: 0.5 },
+      onUpdate: () => syncCounter(tl.progress()),
+      scrollTrigger: {
+        trigger: q("[data-pin]")[0],
+        start: "center center",
+        end: "+=1800",
+        pin: true,
+        scrub: 0.6,
+        anticipatePin: 1,
+      },
+    });
+
+    tl.addLabel("extract", 0.4)
+      .to(stepEls[0] ?? [], { opacity: 0.6 }, "extract")
+      .to(stepEls[1] ?? [], { opacity: 1 }, "extract")
+      .to(statusEls[0] ?? [], { autoAlpha: 0, y: -8 }, "extract")
+      .to(statusEls[1] ?? [], { autoAlpha: 1, y: 0 }, "extract")
+      .to(q("[data-progress]"), { scaleY: 2 / 3 }, "extract")
+      .to(fieldEls, { autoAlpha: 1, scale: 1, stagger: 0.2 }, "extract+=0.1")
+      .addLabel("sync", "+=0.5")
+      .to(stepEls[1] ?? [], { opacity: 0.6 }, "sync")
+      .to(stepEls[2] ?? [], { opacity: 1 }, "sync")
+      .to(statusEls[1] ?? [], { autoAlpha: 0, y: -8 }, "sync")
+      .to(statusEls[2] ?? [], { autoAlpha: 1, y: 0 }, "sync")
+      .to(q("[data-progress]"), { scaleY: 1 }, "sync")
+      .to(checks, { autoAlpha: 1, scale: 1, stagger: 0.1, ease: "back.out(2)" }, "sync+=0.1")
+      .to({}, { duration: 0.4 });
+
+    return () => {
+      if (counter) counter.textContent = "03";
+    };
+  });
 
   return (
     <section

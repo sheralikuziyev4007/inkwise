@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { SplitReveal } from "@/components/motion/split-reveal";
+import { WordReveal } from "@/components/motion/word-reveal";
 import { TableOfContents } from "@/components/sections/customers/table-of-contents";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -60,9 +60,9 @@ export default async function CaseStudyPage({ params }: Props) {
             <ArrowLeftIcon size={16} /> All customers
           </Link>
           <Placeholder label="[CUSTOMER LOGO]" tone="dark" className="h-13 w-52" />
-          <SplitReveal className="h-display m-0 max-w-5xl text-[clamp(2.5rem,5.4vw,4.75rem)] leading-[0.98]">
+          <WordReveal className="h-display m-0 max-w-5xl text-[clamp(2.5rem,5.4vw,4.75rem)] leading-[0.98]">
             {meta.title}
-          </SplitReveal>
+          </WordReveal>
           <dl className="m-0 flex flex-wrap gap-x-10 gap-y-4">
             {facts.map((fact) => (
               <div key={fact.label} className="flex flex-col gap-1">

@@ -2,60 +2,43 @@
 
 import { useRef, type ReactNode } from "react";
 
-import { gsap, useGSAP } from "@/lib/motion/gsap";
-import { MOTION_CONDITIONS } from "@/lib/motion/media";
-import { splitWords } from "@/lib/motion/split-text";
 import { cn } from "@/lib/cn";
+import { splitWords } from "@/lib/motion/split-text";
+import { useMotion } from "@/lib/motion/use-motion";
 
 interface SplitRevealProps {
   children: ReactNode;
-  as?: "h1" | "h2" | "p";
+  as?: "h2" | "h3" | "p";
   className?: string;
-  delay?: number;
   id?: string;
 }
 
 /**
- * Headline whose words rise out of a mask on mount (custom split util, no
- * SplitText plugin). Pre-hidden via `data-hero-reveal` only when motion is allowed.
+ * Below-the-fold headline that splits into words at runtime (custom splitWords
+ * util, no SplitText plugin) and lets them rise as it scrolls into view.
+ * Headlines already on screen when the page loads are left untouched.
  */
-export function SplitReveal({
-  children,
-  as: Tag = "h1",
-  className,
-  delay = 0.1,
-  id,
-}: SplitRevealProps) {
+export function SplitReveal({ children, as: Tag = "h2", className, id }: SplitRevealProps) {
   const ref = useRef<HTMLHeadingElement>(null);
 
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el) return;
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_CONDITIONS, (context) => {
-        const { motionOk } = context.conditions as { motionOk: boolean };
-        if (!motionOk) {
-          gsap.set(el, { visibility: "visible" });
-          return;
-        }
-        const split = splitWords(el);
-        gsap.set(el, { visibility: "visible" });
-        gsap.from(split.words, {
-          yPercent: 110,
-          duration: 0.9,
-          ease: "expo.out",
-          stagger: 0.06,
-          delay,
-        });
-        return () => split.revert();
-      });
-    },
-    { scope: ref },
-  );
+  useMotion(ref, ({ gsap, conditions: { motionOk } }) => {
+    const el = ref.current;
+    if (!motionOk || !el) return;
+    if (el.getBoundingClientRect().top < window.innerHeight) return;
+
+    const split = splitWords(el);
+    gsap.from(split.words, {
+      yPercent: 110,
+      duration: 0.9,
+      ease: "expo.out",
+      stagger: 0.06,
+      scrollTrigger: { trigger: el, start: "top 85%", once: true },
+    });
+    return () => split.revert();
+  });
 
   return (
-    <Tag ref={ref} id={id} data-hero-reveal="" className={cn(className)}>
+    <Tag ref={ref} id={id} className={cn(className)}>
       {children}
     </Tag>
   );

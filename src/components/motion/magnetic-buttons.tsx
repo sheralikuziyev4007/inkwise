@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import { gsap } from "@/lib/motion/gsap";
+import { loadGsap } from "@/lib/motion/gsap";
 import { MEDIA } from "@/lib/motion/media";
 
 const STRENGTH = 0.28;
@@ -23,33 +23,40 @@ export function MagneticButtons() {
     if (!canHover || reduced) return;
 
     const cleanups: Array<() => void> = [];
+    let cancelled = false;
 
-    document.querySelectorAll<HTMLElement>("[data-magnetic]").forEach((el) => {
-      const xTo = gsap.quickTo(el, "x", { duration: 0.5, ease: "power3.out" });
-      const yTo = gsap.quickTo(el, "y", { duration: 0.5, ease: "power3.out" });
+    void loadGsap().then(({ gsap }) => {
+      if (cancelled) return;
+      document.querySelectorAll<HTMLElement>("[data-magnetic]").forEach((el) => {
+        const xTo = gsap.quickTo(el, "x", { duration: 0.5, ease: "power3.out" });
+        const yTo = gsap.quickTo(el, "y", { duration: 0.5, ease: "power3.out" });
 
-      const onMove = (event: PointerEvent) => {
-        const rect = el.getBoundingClientRect();
-        const dx = (event.clientX - (rect.left + rect.width / 2)) * STRENGTH;
-        const dy = (event.clientY - (rect.top + rect.height / 2)) * STRENGTH;
-        xTo(gsap.utils.clamp(-MAX_SHIFT, MAX_SHIFT, dx));
-        yTo(gsap.utils.clamp(-MAX_SHIFT, MAX_SHIFT, dy));
-      };
-      const onLeave = () => {
-        gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.4)" });
-      };
+        const onMove = (event: PointerEvent) => {
+          const rect = el.getBoundingClientRect();
+          const dx = (event.clientX - (rect.left + rect.width / 2)) * STRENGTH;
+          const dy = (event.clientY - (rect.top + rect.height / 2)) * STRENGTH;
+          xTo(gsap.utils.clamp(-MAX_SHIFT, MAX_SHIFT, dx));
+          yTo(gsap.utils.clamp(-MAX_SHIFT, MAX_SHIFT, dy));
+        };
+        const onLeave = () => {
+          gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.4)" });
+        };
 
-      el.addEventListener("pointermove", onMove);
-      el.addEventListener("pointerleave", onLeave);
-      cleanups.push(() => {
-        el.removeEventListener("pointermove", onMove);
-        el.removeEventListener("pointerleave", onLeave);
-        gsap.killTweensOf(el);
-        gsap.set(el, { clearProps: "transform" });
+        el.addEventListener("pointermove", onMove);
+        el.addEventListener("pointerleave", onLeave);
+        cleanups.push(() => {
+          el.removeEventListener("pointermove", onMove);
+          el.removeEventListener("pointerleave", onLeave);
+          gsap.killTweensOf(el);
+          gsap.set(el, { clearProps: "transform" });
+        });
       });
     });
 
-    return () => cleanups.forEach((fn) => fn());
+    return () => {
+      cancelled = true;
+      cleanups.forEach((fn) => fn());
+    };
   }, [pathname]);
 
   return null;

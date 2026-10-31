@@ -31,8 +31,11 @@ export default function PricingPage() {
         }
         lead="Invite your whole team. Every plan starts with a free 14-day pilot on your real documents."
       />
-      <section aria-label="Plans" className="pb-24">
+      <section aria-labelledby="plans-title" className="pb-24">
         <Container>
+          <h2 id="plans-title" className="sr-only">
+            Plans
+          </h2>
           <PricingPlans centered />
         </Container>
       </section>

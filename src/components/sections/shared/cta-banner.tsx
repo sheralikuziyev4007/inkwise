@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { SplitReveal } from "@/components/motion/split-reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 
@@ -24,9 +25,12 @@ export function CtaBanner({
     <section aria-labelledby="cta-title" className="pb-24">
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-10 rounded-[32px] bg-highlight p-10 sm:p-14 lg:p-24">
-          <h2 id="cta-title" className="h-display m-0 max-w-3xl text-[clamp(2.75rem,6vw,5.5rem)]">
+          <SplitReveal
+            id="cta-title"
+            className="h-display m-0 max-w-3xl text-[clamp(2.75rem,6vw,5.5rem)]"
+          >
             {title}
-          </h2>
+          </SplitReveal>
           <div className="flex flex-col items-start gap-4">
             <p className="m-0 max-w-sm text-[17px] leading-normal">{text}</p>
             <ButtonLink href={cta.href} size="lg" arrow data-magnetic>

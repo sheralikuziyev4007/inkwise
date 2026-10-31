@@ -22,6 +22,7 @@ export function CodeBlock(props: ComponentPropsWithoutRef<"pre">) {
     <div className="group relative">
       <pre
         ref={ref}
+        tabIndex={0}
         {...props}
         className="overflow-x-auto rounded-2xl bg-ink p-5 pr-20 font-mono text-sm leading-[1.7] text-paper"
       />

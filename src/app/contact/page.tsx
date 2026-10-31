@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { SplitReveal } from "@/components/motion/split-reveal";
+import { WordReveal } from "@/components/motion/word-reveal";
 import { ContactForm } from "@/components/sections/contact/contact-form";
 import { Container } from "@/components/ui/container";
 import { CheckIcon } from "@/components/ui/icons";
@@ -22,9 +22,9 @@ export default function ContactPage() {
   return (
     <Container className="flex flex-col gap-14 pt-16 pb-24 sm:pt-20 lg:flex-row lg:items-start lg:gap-16">
       <div className="flex flex-col gap-6 lg:flex-1">
-        <SplitReveal className="h-display m-0 text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[1.04]">
+        <WordReveal className="h-display m-0 text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[1.04]">
           Let&apos;s look at your <span className="marker">documents</span>.
-        </SplitReveal>
+        </WordReveal>
         <p className="m-0 text-lg leading-relaxed text-ink-2">
           Tell us what you process today. We&apos;ll reply within one business day with a demo slot
           and a short checklist.

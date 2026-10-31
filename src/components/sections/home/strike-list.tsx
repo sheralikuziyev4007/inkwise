@@ -3,29 +3,21 @@
 import { useRef } from "react";
 
 import { CrossIcon } from "@/components/ui/icons";
-import { gsap, useGSAP } from "@/lib/motion/gsap";
-import { MOTION_CONDITIONS } from "@/lib/motion/media";
+import { useMotion } from "@/lib/motion/use-motion";
 
 /** "Before" list whose strike-through lines draw left → right as it scrolls into view. */
 export function StrikeList({ items }: { items: string[] }) {
   const ref = useRef<HTMLUListElement>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_CONDITIONS, (context) => {
-        const { motionOk } = context.conditions as { motionOk: boolean };
-        if (!motionOk || !ref.current) return;
-        gsap.from(ref.current.querySelectorAll("[data-strike]"), {
-          scaleX: 0,
-          ease: "none",
-          stagger: 0.25,
-          scrollTrigger: { trigger: ref.current, start: "top 80%", end: "bottom 45%", scrub: 0.6 },
-        });
-      });
-    },
-    { scope: ref },
-  );
+  useMotion(ref, ({ gsap, conditions: { motionOk } }) => {
+    if (!motionOk || !ref.current) return;
+    gsap.from(ref.current.querySelectorAll("[data-strike]"), {
+      scaleX: 0,
+      ease: "none",
+      stagger: 0.25,
+      scrollTrigger: { trigger: ref.current, start: "top 80%", end: "bottom 45%", scrub: 0.6 },
+    });
+  });
 
   return (
     <ul ref={ref} className="m-0 flex list-none flex-col gap-4 p-0 text-lg">

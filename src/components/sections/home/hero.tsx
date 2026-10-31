@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 
+import { WordReveal } from "@/components/motion/word-reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { CheckIcon } from "@/components/ui/icons";
-import { gsap, useGSAP } from "@/lib/motion/gsap";
-import { MOTION_CONDITIONS } from "@/lib/motion/media";
-import { splitWords } from "@/lib/motion/split-text";
+import { useMotion } from "@/lib/motion/use-motion";
 
 const extracted = [
   { key: "invoice_no", value: "INV-20418" },
@@ -62,75 +61,81 @@ function layoutConnectors(stage: HTMLElement) {
 export function Hero() {
   const root = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
+  // Connectors are measured, so they stay aligned at any width (no GSAP needed).
+  useEffect(() => {
+    const stage = root.current?.querySelector<HTMLElement>("[data-hero-stage]");
+    if (!stage) return;
+    const mql = window.matchMedia("(min-width: 1024px)");
+    let observer: ResizeObserver | null = null;
+    const sync = () => {
+      observer?.disconnect();
+      observer = null;
+      if (!mql.matches) return;
+      const relayout = () => layoutConnectors(stage);
+      relayout();
+      observer = new ResizeObserver(relayout);
+      observer.observe(stage);
+      void document.fonts?.ready.then(relayout);
+    };
+    sync();
+    mql.addEventListener("change", sync);
+    return () => {
+      mql.removeEventListener("change", sync);
+      observer?.disconnect();
+    };
+  }, []);
+
+  useMotion(
+    root,
+    ({ gsap, conditions }) => {
       const el = root.current;
       if (!el) return;
       const q = gsap.utils.selector(el);
-      const mm = gsap.matchMedia();
 
-      // Connectors are measured, so they stay aligned at any width.
-      mm.add("(min-width: 1024px)", () => {
-        const stage = q<HTMLElement>("[data-hero-stage]")[0];
-        if (!stage) return;
-        const relayout = () => layoutConnectors(stage);
-        relayout();
-        const observer = new ResizeObserver(relayout);
-        observer.observe(stage);
-        void document.fonts?.ready.then(relayout);
-        return () => observer.disconnect();
-      });
+      const { motionOk, desktop } = conditions;
+      const stage = q<HTMLElement>("[data-hero-stage]")[0];
+      if (!stage) return;
 
-      mm.add({ ...MOTION_CONDITIONS }, (context) => {
-        const { motionOk, desktop } = context.conditions as { motionOk: boolean; desktop: boolean };
-        const heading = q<HTMLElement>("[data-hero-heading]")[0];
-        const stage = q<HTMLElement>("[data-hero-stage]")[0];
-        if (!heading || !stage) return;
+      if (!motionOk) {
+        gsap.set(stage, { visibility: "visible" });
+        return;
+      }
 
-        if (!motionOk) {
-          gsap.set([heading, stage], { visibility: "visible" });
-          return;
-        }
+      // Headline words rise via CSS from the first paint (WordReveal);
+      // the document stage is choreographed here once JavaScript is ready.
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-        const split = splitWords(heading);
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.set(stage, { visibility: "visible" })
+        .from(q("[data-doc]"), { y: 24, rotate: 0, autoAlpha: 0, duration: 0.6 }, 0)
+        .from(q("[data-panel]"), { x: 24, autoAlpha: 0, duration: 0.6 }, 0.15)
+        .from(q("[data-row]"), { autoAlpha: 0, x: -8, duration: 0.3, stagger: 0.1 }, 0.9)
+        .fromTo(
+          q("[data-scan]"),
+          { autoAlpha: 1, top: "8%" },
+          { top: "92%", duration: 1.2, ease: "none" },
+          0.55,
+        )
+        .to(q("[data-scan]"), { autoAlpha: 0, duration: 0.25 }, ">-0.05")
+        .from(
+          q("[data-field]"),
+          { backgroundColor: "rgba(198,244,50,0)", duration: 0.25, stagger: 0.22 },
+          0.65,
+        )
+        .from(
+          q("[data-sync]"),
+          { scale: 0.6, autoAlpha: 0, duration: 0.45, ease: "back.out(2)" },
+          ">-0.1",
+        );
 
-        tl.set([heading, stage], { visibility: "visible" })
-          .from(split.words, { yPercent: 110, duration: 0.9, ease: "expo.out", stagger: 0.06 })
-          .from(q("[data-hero-fade]"), { y: 16, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, 0.35)
-          .from(q("[data-doc]"), { y: 24, rotate: 0, autoAlpha: 0, duration: 0.6 }, 0.3)
-          .from(q("[data-panel]"), { x: 24, autoAlpha: 0, duration: 0.6 }, 0.45)
-          .from(q("[data-row]"), { autoAlpha: 0, x: -8, duration: 0.3, stagger: 0.1 }, 1.2)
-          .fromTo(
-            q("[data-scan]"),
-            { autoAlpha: 1, top: "8%" },
-            { top: "92%", duration: 1.2, ease: "none" },
-            0.85,
-          )
-          .to(q("[data-scan]"), { autoAlpha: 0, duration: 0.25 }, ">-0.05")
-          .from(
-            q("[data-field]"),
-            { backgroundColor: "rgba(198,244,50,0)", duration: 0.25, stagger: 0.22 },
-            0.95,
-          )
-          .from(
-            q("[data-sync]"),
-            { scale: 0.6, autoAlpha: 0, duration: 0.45, ease: "back.out(2)" },
-            ">-0.1",
-          );
-
-        if (desktop) {
-          tl.from(
-            q("[data-connector]"),
-            { scaleX: 0, duration: 0.35, stagger: 0.25, ease: "power2.inOut" },
-            1.05,
-          );
-        }
-
-        return () => split.revert();
-      });
+      if (desktop) {
+        tl.from(
+          q("[data-connector]"),
+          { scaleX: 0, duration: 0.35, stagger: 0.25, ease: "power2.inOut" },
+          0.75,
+        );
+      }
     },
-    { scope: root },
+    { when: "now" },
   );
 
   return (
@@ -138,29 +143,34 @@ export function Hero() {
       <Container className="flex flex-col gap-12 pt-14 pb-14 sm:pt-20 lg:flex-row lg:items-center lg:gap-12">
         <div className="flex min-w-0 flex-1 flex-col gap-7 lg:basis-[48%]">
           <p
-            data-hero-fade
+            data-fade-up
+            style={{ "--d": "0s" } as CSSProperties}
             className="m-0 inline-flex items-center gap-2 self-start rounded-full border border-ink px-3 py-1.5 font-mono text-[13px]"
           >
             <span className="size-2 rounded-full bg-ink" aria-hidden="true" />
             AI document automation for ops teams
           </p>
-          <h1
+          <WordReveal
             id="hero-title"
-            data-hero-heading
-            data-hero-reveal=""
+            delay={0.1}
             className="h-display m-0 text-[clamp(3.25rem,5.6vw,5.25rem)]"
           >
             Paperwork in. <span className="marker">Clean data</span> out.
-          </h1>
+          </WordReveal>
           <p
-            data-hero-fade
+            data-fade-up
+            style={{ "--d": "0.4s" } as CSSProperties}
             className="m-0 max-w-xl text-lg leading-relaxed text-ink-2 sm:text-[19px]"
           >
             Inkwise reads invoices, contracts and forms like your sharpest analyst — then sends
             verified fields straight into your ERP, accounting and ops tools. No retyping. No
             copy-paste.
           </p>
-          <div data-hero-fade className="flex flex-wrap items-center gap-3">
+          <div
+            data-fade-up
+            style={{ "--d": "0.5s" } as CSSProperties}
+            className="flex flex-wrap items-center gap-3"
+          >
             <ButtonLink href="/contact" size="lg" arrow data-magnetic>
               Book a demo
             </ButtonLink>
@@ -168,7 +178,11 @@ export function Hero() {
               See how it works
             </ButtonLink>
           </div>
-          <p data-hero-fade className="m-0 text-sm text-ink-3">
+          <p
+            data-fade-up
+            style={{ "--d": "0.6s" } as CSSProperties}
+            className="m-0 text-sm text-ink-3"
+          >
             Free 14-day pilot · No credit card · EU &amp; US data residency
           </p>
         </div>

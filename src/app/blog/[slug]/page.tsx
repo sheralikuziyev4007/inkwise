@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { SplitReveal } from "@/components/motion/split-reveal";
+import { WordReveal } from "@/components/motion/word-reveal";
 import { PostCard } from "@/components/sections/blog/post-card";
 import { ReadingProgress } from "@/components/sections/blog/reading-progress";
 import { TableOfContents } from "@/components/sections/customers/table-of-contents";
@@ -64,9 +64,9 @@ export default async function PostPage({ params }: Props) {
               <li aria-current="page">{meta.category}</li>
             </ol>
           </nav>
-          <SplitReveal className="h-display m-0 text-[clamp(2.5rem,5vw,4.25rem)] leading-none">
+          <WordReveal className="h-display m-0 text-[clamp(2.5rem,5vw,4.25rem)] leading-none">
             {meta.title}
-          </SplitReveal>
+          </WordReveal>
           <p className="m-0 text-xl leading-relaxed text-ink-2">{meta.excerpt}</p>
           <p className="m-0 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px] text-ink-2">
             <strong className="text-ink">{meta.author}</strong>
