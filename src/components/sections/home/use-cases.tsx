@@ -69,9 +69,8 @@ export function UseCases() {
             </svg>
           </p>
         </div>
-        <div
+        <section
           data-track-viewport
-          role="region"
           aria-label="Supported document types"
           tabIndex={0}
           className="snap-x snap-mandatory [scrollbar-width:thin] overflow-x-auto pb-4 lg:pb-0"
@@ -111,7 +110,7 @@ export function UseCases() {
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       </div>
     </section>
   );

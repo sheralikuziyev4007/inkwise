@@ -37,6 +37,8 @@
 
 @layer base {
   html {
+    /* Keeps focused elements and anchor targets clear of the sticky header (WCAG 2.4.11). */
+    scroll-padding-top: 6rem;
     background: var(--color-paper);
     color: var(--color-ink);
     -webkit-text-size-adjust: 100%;

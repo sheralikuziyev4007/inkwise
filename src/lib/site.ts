@@ -1,9 +1,20 @@
+/**
+ * Absolute site URL for canonical links, Open Graph, sitemap and JSON-LD.
+ * Order: explicit env var → Vercel production domain → Vercel preview URL → localhost.
+ */
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  const url = explicit ?? (vercel ? `https://${vercel}` : "http://localhost:3000");
+  return url.replace(/\/$/, "");
+}
+
 export const siteConfig = {
   name: "Inkwise",
   tagline: "Paperwork in. Clean data out.",
   description:
     "Inkwise reads invoices, contracts and forms, then sends verified fields straight into your ERP, accounting and ops tools.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://inkwise.vercel.app").replace(/\/$/, ""),
+  url: resolveSiteUrl(),
   email: "hello@inkwise.example",
   author: {
     name: "Sherali Kuziyev",

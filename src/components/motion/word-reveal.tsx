@@ -25,13 +25,10 @@ export function WordReveal({
 }: WordRevealProps) {
   const label = textOf(children).replace(/\s+/g, " ").trim();
   return (
-    <Tag
-      id={id}
-      aria-label={label}
-      className={className}
-      style={{ "--d": `${delay}s` } as CSSProperties}
-    >
-      {splitNodes(children)}
+    <Tag id={id} className={className} style={{ "--d": `${delay}s` } as CSSProperties}>
+      {/* Screen readers get the plain sentence; the animated word spans are hidden from them. */}
+      <span className="sr-only">{label}</span>
+      <span aria-hidden="true">{splitNodes(children)}</span>
     </Tag>
   );
 }

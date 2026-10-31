@@ -92,6 +92,7 @@ export function ReviewQueue() {
                 </label>
                 <input
                   id="rq-value"
+                  type="text"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                   className="h-11 rounded-[10px] border-[1.5px] border-highlight bg-ink-raised px-3 font-mono text-paper"

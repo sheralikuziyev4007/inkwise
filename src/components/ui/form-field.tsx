@@ -64,6 +64,7 @@ export function TextField({
     <FieldShell id={id} label={label} error={error} hint={hint} optional={optional}>
       <input
         id={id}
+        type="text"
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(id, error, hint)}
         className={cn(controlClass(Boolean(error)), "h-[50px]", className)}
@@ -132,16 +133,16 @@ export function CheckboxField({
 >) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="flex items-start gap-3 text-sm text-ink-2">
+      <label className="flex items-start gap-3 text-sm text-ink-2">
         <input
           id={id}
           type="checkbox"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
-          className={cn("mt-0.5 size-5 flex-none accent-ink", className)}
+          className={cn("size-6 flex-none accent-ink", className)}
           {...props}
         />
-        <span>{label}</span>
+        <span className="pt-0.5">{label}</span>
       </label>
       {error ? (
         <p id={`${id}-error`} className="m-0 flex items-center gap-1.5 text-[13px] text-error">

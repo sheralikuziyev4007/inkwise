@@ -29,10 +29,11 @@ describe("splitWords", () => {
     expect(words).toHaveLength(5);
   });
 
-  it("exposes the full sentence to assistive tech via aria-label", () => {
+  it("keeps the full sentence for assistive tech in a visually hidden copy", () => {
     const el = heading("Paperwork   in.\n Clean data out.");
     splitWords(el);
-    expect(el).toHaveAttribute("aria-label", "Paperwork in. Clean data out.");
+    expect(el.querySelector(".sr-only")?.textContent).toBe("Paperwork in. Clean data out.");
+    expect(el).not.toHaveAttribute("aria-label");
   });
 
   it("restores the original DOM nodes on revert", () => {
@@ -45,14 +46,6 @@ describe("splitWords", () => {
 
     expect(el.innerHTML).toBe(originalHTML);
     expect(el.firstChild).toBe(originalText);
-    expect(el).not.toHaveAttribute("aria-label");
-  });
-
-  it("keeps an existing aria-label after revert", () => {
-    const el = heading("Two words");
-    el.setAttribute("aria-label", "Custom label");
-    const { revert } = splitWords(el);
-    revert();
-    expect(el).toHaveAttribute("aria-label", "Custom label");
+    expect(el.querySelector(".sr-only")).toBeNull();
   });
 });

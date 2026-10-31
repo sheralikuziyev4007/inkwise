@@ -79,9 +79,9 @@ export default async function PostPage({ params }: Props) {
         </Container>
 
         <Container className="flex flex-col gap-12 pb-24 lg:flex-row lg:gap-16">
-          <aside className="lg:w-56 lg:flex-none">
+          <div className="lg:w-56 lg:flex-none">
             <TableOfContents sections={meta.sections} />
-          </aside>
+          </div>
           <div id="article-body" className="prose-ink max-w-[720px] min-w-0 flex-1">
             <Content />
           </div>

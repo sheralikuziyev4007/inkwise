@@ -23,7 +23,7 @@ export function splitNodes(children: ReactNode, counter = { i: 0 }): ReactNode {
           if (/^\s+$/.test(token)) return token;
           const index = counter.i++;
           return (
-            <span key={k} className="word-mask" aria-hidden="true">
+            <span key={k} className="word-mask">
               <span className="word" style={{ "--i": index } as CSSProperties}>
                 {token}
               </span>

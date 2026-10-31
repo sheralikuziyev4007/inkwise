@@ -91,9 +91,9 @@ export default async function CaseStudyPage({ params }: Props) {
       </Container>
 
       <Container className="flex flex-col gap-12 py-20 lg:flex-row lg:gap-16">
-        <aside className="lg:w-56 lg:flex-none">
+        <div className="lg:w-56 lg:flex-none">
           <TableOfContents sections={meta.sections} />
-        </aside>
+        </div>
         <div className="prose-ink max-w-[720px] min-w-0 flex-1">
           <Content />
         </div>

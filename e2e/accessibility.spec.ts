@@ -20,7 +20,7 @@ test.describe("accessibility", () => {
     test(`${path} has no serious or critical axe violations`, async ({ page }) => {
       await page.goto(path);
       const results = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();
       const serious = results.violations.filter(
         (v) => v.impact === "serious" || v.impact === "critical",

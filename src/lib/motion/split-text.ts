@@ -4,7 +4,7 @@
  * Wraps every word of an element in a mask (`overflow: clip`) and an inner span
  * that can be animated. Nested markup (e.g. a highlighted <span>) is preserved
  * because only text nodes are replaced. Screen readers keep reading the original
- * sentence: the element gets an aria-label and the generated spans are hidden.
+ * sentence from a visually hidden copy; the generated word spans are hidden.
  */
 export interface SplitResult {
   /** Inner spans, one per word, in reading order. */
@@ -17,8 +17,6 @@ const WORD_CLASS = "split-word";
 const MASK_CLASS = "split-mask";
 
 export function splitWords(element: HTMLElement): SplitResult {
-  const hadAriaLabel = element.hasAttribute("aria-label");
-  const originalAriaLabel = element.getAttribute("aria-label");
   const label = (element.textContent ?? "").replace(/\s+/g, " ").trim();
 
   const words: HTMLSpanElement[] = [];
@@ -63,7 +61,13 @@ export function splitWords(element: HTMLElement): SplitResult {
     node.parentNode?.replaceChild(fragment, node);
   }
 
-  if (label) element.setAttribute("aria-label", label);
+  let srCopy: HTMLSpanElement | null = null;
+  if (label) {
+    srCopy = doc.createElement("span");
+    srCopy.className = "sr-only";
+    srCopy.textContent = label;
+    element.insertBefore(srCopy, element.firstChild);
+  }
 
   return {
     words,
@@ -73,11 +77,7 @@ export function splitWords(element: HTMLElement): SplitResult {
         if (first?.parentNode) first.parentNode.insertBefore(original, first);
         for (const n of inserted) n.parentNode?.removeChild(n);
       }
-      if (hadAriaLabel && originalAriaLabel !== null) {
-        element.setAttribute("aria-label", originalAriaLabel);
-      } else {
-        element.removeAttribute("aria-label");
-      }
+      srCopy?.remove();
     },
   };
 }

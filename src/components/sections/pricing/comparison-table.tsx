@@ -14,9 +14,8 @@ export function ComparisonTable() {
             Scroll table →
           </p>
         </div>
-        <div
-          role="region"
-          aria-labelledby="compare-title"
+        <section
+          aria-label="Plan comparison table, scrolls horizontally"
           tabIndex={0}
           className="relative overflow-x-auto rounded-[var(--radius-card)] border border-line bg-sheet"
         >
@@ -87,7 +86,7 @@ export function ComparisonTable() {
               </tbody>
             ))}
           </table>
-        </div>
+        </section>
       </Container>
     </section>
   );

@@ -15,7 +15,7 @@ describe("Accordion", () => {
     const first = screen.getByRole("button", { name: "First?" });
     expect(first).toHaveAttribute("aria-expanded", "true");
     const panel = document.getElementById(first.getAttribute("aria-controls")!);
-    expect(panel).toHaveAttribute("role", "region");
+    expect(panel).toBe(screen.getByRole("region", { name: "First?" }));
     expect(screen.getByRole("button", { name: "Second?" })).toHaveAttribute(
       "aria-expanded",
       "false",

@@ -102,27 +102,29 @@ export function HowItWorks() {
           </div>
 
           {/* Steps */}
-          <ol
-            data-steps
-            className="relative m-0 flex list-none flex-col gap-10 border-l-2 border-ink-line p-0 pl-7 lg:flex-1"
-          >
+          <div className="relative lg:flex-1">
             <span
               data-progress
               aria-hidden="true"
-              className="absolute top-0 -left-[2px] hidden h-full w-[2px] origin-top bg-highlight lg:block"
+              className="absolute top-0 left-0 hidden h-full w-[2px] origin-top bg-highlight lg:block"
             />
-            {steps.map((step) => (
-              <li key={step.label} data-step className="flex flex-col gap-2.5">
-                <span className="eyebrow text-highlight">{step.label}</span>
-                <h3 className="m-0 font-display text-[28px] font-semibold tracking-[-0.02em] lg:text-[32px]">
-                  {step.title}
-                </h3>
-                <p className="m-0 max-w-md text-base leading-relaxed text-muted-2 lg:text-[17px]">
-                  {step.text}
-                </p>
-              </li>
-            ))}
-          </ol>
+            <ol
+              data-steps
+              className="m-0 flex list-none flex-col gap-10 border-l-2 border-ink-line p-0 pl-7"
+            >
+              {steps.map((step) => (
+                <li key={step.label} data-step className="flex flex-col gap-2.5">
+                  <span className="eyebrow text-highlight">{step.label}</span>
+                  <h3 className="m-0 font-display text-[28px] font-semibold tracking-[-0.02em] lg:text-[32px]">
+                    {step.title}
+                  </h3>
+                  <p className="m-0 max-w-md text-base leading-relaxed text-muted-2 lg:text-[17px]">
+                    {step.text}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </Container>
     </section>

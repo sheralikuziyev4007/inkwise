@@ -59,9 +59,8 @@ export function Accordion({
                 </span>
               </button>
             </Heading>
-            <div
+            <section
               id={panelId}
-              role="region"
               aria-labelledby={buttonId}
               inert={!isOpen}
               className={cn(
@@ -74,7 +73,7 @@ export function Accordion({
                   {item.answer}
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         );
       })}
