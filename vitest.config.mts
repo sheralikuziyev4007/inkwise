@@ -4,6 +4,8 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [react()],
   resolve: { tsconfigPaths: true },
+  // Tests don't need Tailwind; skip the project PostCSS config for imported CSS.
+  css: { postcss: { plugins: [] } },
   test: {
     environment: "jsdom",
     globals: true,
