@@ -124,7 +124,7 @@ Measured locally on production builds:
 | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Lighthouse, desktop (Home, Features, Pricing, case study, Blog, About, Contact) | Performance 100 · Accessibility 100 · Best Practices 100 · SEO 100                                                                                |
 | Lighthouse, mobile (simulated slow 4G + 4× CPU)                                 | Accessibility 100 · Best Practices 100 · SEO 100; Performance 78–87 in a shared 2-core container — re-check on PageSpeed Insights after deploying |
-| Unit/component tests                                                            | 39 passing                                                                                                                                        |
+| Unit/component tests                                                            | 38 passing                                                                                                                                        |
 | End-to-end tests                                                                | Chromium + mobile passing locally; Firefox and WebKit run in CI                                                                                   |
 | axe-core (WCAG 2.1 AA)                                                          | No serious or critical violations on key pages                                                                                                    |
 
