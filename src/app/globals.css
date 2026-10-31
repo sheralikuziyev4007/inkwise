@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Design tokens — "Ink & Highlighter"
+   Contrast (WCAG): ink/paper 17.2:1 · ink-2/paper 9.5:1 · ink-3/paper 7.4:1
+   ink/highlight 15.0:1 · muted/ink 8.0:1 · error/sheet 6.6:1
+------------------------------------------------------------------- */
+@theme {
+  --color-ink: #0d0f12;
+  --color-ink-2: #3a3f47;
+  --color-ink-3: #4a4f57;
+  --color-ink-raised: #1f232a;
+  --color-ink-line: #2a2f37;
+  --color-muted: #a3a8b0;
+  --color-muted-2: #d5d8dd;
+  --color-paper: #f2f3ef;
+  --color-paper-2: #e3e5de;
+  --color-sheet: #ffffff;
+  --color-line: #d9dbd4;
+  --color-line-2: #c9ccc3;
+  --color-dash: #a9ada4;
+  --color-highlight: #c6f432;
+  --color-highlight-soft: #f6fce3;
+  --color-error: #b42318;
+  --color-error-soft: #fdecea;
+
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+
+  --radius-card: 22px;
+  --radius-tile: 16px;
+  --radius-field: 12px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .on-dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline-color: var(--color-highlight);
+  }
+
+  ::selection {
+    background: var(--color-highlight);
+    color: var(--color-ink);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@layer components {
+  .marker {
+    background: var(--color-highlight);
+    color: var(--color-ink);
+    padding-inline: 0.12em;
+    border-radius: 0.12em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .h-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
+
+  .h-section {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    font-size: clamp(2.25rem, 4.2vw, 3.75rem);
+  }
+
+  /* Prose for MDX articles */
+  .prose-ink {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--color-ink-2);
+  }
+  .prose-ink > * + * {
+    margin-top: 1.25rem;
+  }
+  .prose-ink h2 {
+    margin-top: 2.5rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    scroll-margin-top: 6rem;
+  }
+  .prose-ink h3 {
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--color-ink);
+  }
+  .prose-ink strong {
+    color: var(--color-ink);
+  }
+  .prose-ink a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-highlight);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
+  }
+  .prose-ink ul,
+  .prose-ink ol {
+    padding-left: 1.4rem;
+  }
+  .prose-ink ul {
+    list-style: disc;
+  }
+  .prose-ink ol {
+    list-style: decimal;
+  }
+  .prose-ink li + li {
+    margin-top: 0.5rem;
+  }
+  .prose-ink code:not(pre code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-paper-2);
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+    color: var(--color-ink);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Motion guards
+   `html.motion-ok` is set by an inline script only when the visitor has
+   not asked for reduced motion. Elements that start hidden for an entrance
+   animation are only hidden under that class, and a CSS fallback reveals
+   them if JavaScript never runs the animation.
+------------------------------------------------------------------- */
+html.motion-ok [data-hero-reveal] {
+  visibility: hidden;
+  animation: reveal-fallback 0s linear 2.5s forwards;
+}
+
+@keyframes reveal-fallback {
+  to {
+    visibility: visible;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
