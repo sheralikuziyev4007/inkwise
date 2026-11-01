@@ -4,6 +4,8 @@ import { Container } from "@/components/ui/container";
 import { Logo } from "@/components/ui/logo";
 import { footerNav, siteConfig } from "@/lib/site";
 
+import { CurrentYear } from "./current-year";
+
 export function Footer() {
   return (
     <footer className="border-t border-line pt-14 pb-10">
@@ -41,7 +43,9 @@ export function Footer() {
             </a>
             .
           </p>
-          <p className="m-0">© {new Date().getFullYear()} Inkwise</p>
+          <p className="m-0">
+            © <CurrentYear buildYear={new Date().getFullYear()} /> Inkwise
+          </p>
         </div>
       </Container>
     </footer>
