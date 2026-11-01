@@ -12,10 +12,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/blog",
     "/about",
     "/contact",
+    "/privacy",
   ].map((route) => ({
     url: `${siteConfig.url}${route}`,
     changeFrequency: "monthly" as const,
-    priority: route === "" ? 1 : 0.7,
+    priority: route === "" ? 1 : route === "/privacy" ? 0.3 : 0.7,
   }));
   const [studies, posts] = await Promise.all([getCaseStudies(), getPosts()]);
   return [

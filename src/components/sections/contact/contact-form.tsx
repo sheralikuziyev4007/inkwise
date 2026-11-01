@@ -168,8 +168,8 @@ export function ContactForm({ submit = submitContact }: ContactFormProps) {
         label={
           <>
             I agree that Inkwise may contact me about this request.{" "}
-            <Link href="/about" className="font-semibold text-ink underline underline-offset-2">
-              About us
+            <Link href="/privacy" className="font-semibold text-ink underline underline-offset-2">
+              Privacy notice
             </Link>
           </>
         }

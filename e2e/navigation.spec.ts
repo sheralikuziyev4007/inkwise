@@ -8,6 +8,7 @@ const pages = [
   { path: "/blog", title: /Blog — Inkwise/, h1: /back office/ },
   { path: "/about", title: /About — Inkwise/, h1: /make decisions/ },
   { path: "/contact", title: /Contact — Inkwise/, h1: /your documents/ },
+  { path: "/privacy", title: /Privacy notice — Inkwise/, h1: /Privacy notice/ },
   {
     path: "/blog/three-way-matching-explained",
     title: /Three-way matching/,

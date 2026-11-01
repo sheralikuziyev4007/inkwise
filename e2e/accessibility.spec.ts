@@ -10,6 +10,7 @@ const paths = [
   "/blog/three-way-matching-explained",
   "/about",
   "/contact",
+  "/privacy",
 ];
 
 test.describe("accessibility", () => {
