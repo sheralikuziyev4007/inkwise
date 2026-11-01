@@ -18,7 +18,7 @@ export const siteConfig = {
   email: "hello@inkwise.example",
   author: {
     name: "Sherali Kuziyev",
-    url: process.env.NEXT_PUBLIC_AUTHOR_URL ?? "https://www.upwork.com",
+    url: process.env.NEXT_PUBLIC_AUTHOR_URL ?? "https://github.com/sheralikuziyev4007",
   },
 } as const;
 
