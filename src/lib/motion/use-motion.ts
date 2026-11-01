@@ -16,9 +16,14 @@ export type MotionSetup = (
   api: GsapBundle & { conditions: MotionConditions },
 ) => void | (() => void);
 
+export type MotionTiming = "now" | "idle" | "now-on-desktop";
+
 interface UseMotionOptions {
-  /** "now": start loading GSAP right after mount; "idle": wait for an idle period. */
-  when?: "now" | "idle";
+  /**
+   * "now": start loading GSAP right after mount; "idle": wait for an idle period;
+   * "now-on-desktop": "now" when the target is above the fold on desktop, "idle" elsewhere.
+   */
+  when?: MotionTiming;
   deps?: DependencyList;
 }
 
@@ -57,7 +62,9 @@ export function useMotion(
       });
     };
 
-    const cancelSchedule = when === "now" ? (start(), () => {}) : onIdle(start);
+    const immediate =
+      when === "now" || (when === "now-on-desktop" && window.matchMedia(MEDIA.desktop).matches);
+    const cancelSchedule = immediate ? (start(), () => {}) : onIdle(start);
 
     return () => {
       cancelled = true;

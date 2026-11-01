@@ -31,7 +31,7 @@ const lines = [
 export function Hero() {
   return (
     <section id="hero" aria-labelledby="hero-title" className="overflow-x-clip">
-      <MotionScene scene="hero" target="hero" when="now" />
+      <MotionScene scene="hero" target="hero" when="now-on-desktop" />
       <HeroConnectors target="hero" />
       <Container className="flex flex-col gap-12 pt-14 pb-14 sm:pt-20 lg:flex-row lg:items-center lg:gap-12">
         <div className="flex min-w-0 flex-1 flex-col gap-7 lg:basis-[48%]">

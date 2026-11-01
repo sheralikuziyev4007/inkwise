@@ -97,7 +97,8 @@ export function Integrations() {
         stagger: 0.04,
       });
     },
-    { when: "now", deps: [active] },
+    // Below the fold and idle on first render, so don't compete with hydration.
+    { when: "idle", deps: [active] },
   );
 
   return (

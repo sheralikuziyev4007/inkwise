@@ -3,13 +3,13 @@
 import { useEffect, useRef } from "react";
 
 import { scenes, type SceneName } from "@/lib/motion/scenes";
-import { useMotion } from "@/lib/motion/use-motion";
+import { useMotion, type MotionTiming } from "@/lib/motion/use-motion";
 
 interface MotionSceneProps {
   scene: SceneName;
   /** id of the server-rendered element the scene animates. */
   target: string;
-  when?: "now" | "idle";
+  when?: MotionTiming;
 }
 
 /**
