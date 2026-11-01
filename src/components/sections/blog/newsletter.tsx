@@ -48,7 +48,10 @@ export function Newsletter() {
                   type="email"
                   autoComplete="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (state === "error") setState("idle");
+                  }}
                   aria-invalid={state === "error" ? true : undefined}
                   aria-describedby={state === "error" ? "nl-error" : undefined}
                   placeholder="you@company.com"
@@ -59,7 +62,7 @@ export function Newsletter() {
                 Subscribe
               </Button>
               {state === "error" ? (
-                <p id="nl-error" className="m-0 w-full text-sm text-highlight">
+                <p id="nl-error" role="alert" className="m-0 w-full text-sm text-highlight">
                   Enter a valid email address.
                 </p>
               ) : null}
