@@ -6,6 +6,8 @@ import { Container } from "@/components/ui/container";
 export const metadata: Metadata = {
   title: "Page not found",
   robots: { index: false },
+  // Don't inherit the home page canonical from the root layout.
+  alternates: { canonical: null },
 };
 
 export default function NotFound() {
