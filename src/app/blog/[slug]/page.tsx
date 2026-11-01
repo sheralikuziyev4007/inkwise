@@ -54,14 +54,18 @@ export default async function PostPage({ params }: Props) {
       <article>
         <Container as="header" className="flex max-w-4xl flex-col gap-6 pt-16 pb-12 sm:pt-20">
           <nav aria-label="Breadcrumb" className="text-sm text-ink-3">
-            <ol className="m-0 flex list-none gap-2 p-0">
-              <li>
+            <ol className="m-0 flex min-w-0 list-none gap-2 p-0">
+              <li className="flex-none">
                 <Link href="/blog" className="hover:underline">
                   Blog
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li aria-current="page">{meta.category}</li>
+              <li className="flex-none">{meta.category}</li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="min-w-0 truncate text-ink-2">
+                {meta.title}
+              </li>
             </ol>
           </nav>
           <WordReveal className="h-display m-0 text-[clamp(2.5rem,5vw,4.25rem)] leading-none">
