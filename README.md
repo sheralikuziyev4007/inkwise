@@ -2,7 +2,7 @@
 
 A multi-page marketing website for **Inkwise**, a fictional AI tool that extracts data from invoices, contracts and forms. Built as a portfolio piece to show design-to-code work: one memorable scroll-driven motion moment, restrained animation everywhere else, and production-grade accessibility, SEO and testing.
 
-> **Note:** Inkwise is a concept brand. Customer logos, statistics and quotes are clearly marked placeholders (e.g. `[CUSTOMER LOGO]`, `[STAT]`) and no real companies are referenced.
+> **Note:** Inkwise is a concept brand. The customers (Corvane, Hallmere, Velmora…), people, quotes and figures are invented samples and are labelled as such on the site. Logos and document illustrations are original SVGs; avatars are monograms, not photos of real people.
 
 ![Hero animation: an invoice is scanned and its fields fly into the extracted-data panel](docs/screenshots/hero.gif)
 

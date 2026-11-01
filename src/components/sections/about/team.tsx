@@ -1,27 +1,29 @@
 import Link from "next/link";
 
+import { Avatar } from "@/components/ui/avatar";
 import { Container } from "@/components/ui/container";
-import { Placeholder } from "@/components/ui/placeholder";
+import { team } from "@/lib/sample-data";
 
-const team = [
-  { role: "Co-founder, CEO" },
-  { role: "Co-founder, CTO" },
-  { role: "Head of Product" },
-];
+const tones = [0, 1, 2] as const;
 
 export function Team() {
   return (
     <section aria-labelledby="team-title" className="py-24">
       <Container>
-        <h2 id="team-title" className="h-section m-0 mb-8 text-[clamp(2.25rem,4.2vw,3.5rem)]">
-          The team
-        </h2>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+          <h2 id="team-title" className="h-section m-0 text-[clamp(2.25rem,4.2vw,3.5rem)]">
+            The team
+          </h2>
+          <p className="m-0 text-sm text-ink-3">Sample team · concept project</p>
+        </div>
         <ul className="m-0 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-4">
-          {team.map((member) => (
-            <li key={member.role} className="flex flex-col gap-3">
-              <Placeholder label="[PHOTO]" className="aspect-[4/5] rounded-[20px] bg-paper-2" />
+          {team.map((member, i) => (
+            <li key={member.name} className="flex flex-col gap-3">
+              <div className="flex aspect-[4/5] items-center justify-center rounded-[20px] bg-paper-2">
+                <Avatar name={member.name} size={112} tone={tones[i % 3]} />
+              </div>
               <p className="m-0">
-                <strong>[NAME]</strong>
+                <strong>{member.name}</strong>
                 <br />
                 <span className="text-[15px] text-ink-3">{member.role}</span>
               </p>

@@ -5,7 +5,8 @@ import { Values } from "@/components/sections/about/values";
 import { CtaBanner } from "@/components/sections/shared/cta-banner";
 import { PageHero } from "@/components/sections/shared/page-hero";
 import { Container } from "@/components/ui/container";
-import { Placeholder } from "@/components/ui/placeholder";
+import { DocIllustration } from "@/components/ui/doc-illustration";
+import { aboutFacts as facts } from "@/lib/sample-data";
 
 export const metadata: Metadata = {
   title: "About",
@@ -13,12 +14,6 @@ export const metadata: Metadata = {
     "Why we build Inkwise: skilled people should make decisions, not copy numbers between windows.",
   alternates: { canonical: "/about" },
 };
-
-const facts = [
-  { value: "[YEAR]", label: "founded" },
-  { value: "[N]", label: "people" },
-  { value: "[N]", label: "countries" },
-];
 
 export default function AboutPage() {
   return (
@@ -34,10 +29,26 @@ export default function AboutPage() {
       />
       <section aria-labelledby="story-title" className="pb-24">
         <Container className="flex flex-col gap-12 lg:flex-row">
-          <Placeholder
-            label="[TEAM PHOTO]"
-            className="h-[420px] rounded-[28px] bg-paper-2 lg:flex-1"
-          />
+          <div
+            aria-hidden="true"
+            className="relative h-[420px] overflow-hidden rounded-[28px] bg-ink lg:flex-1"
+          >
+            <DocIllustration
+              kind="contract"
+              tilt={-9}
+              className="absolute top-8 left-[5%] w-[46%]"
+            />
+            <DocIllustration
+              kind="invoice"
+              tilt={7}
+              className="absolute top-12 right-[5%] w-[46%]"
+            />
+            <DocIllustration
+              kind="receipt"
+              tilt={-2}
+              className="absolute bottom-8 left-[26%] w-[48%]"
+            />
+          </div>
           <div className="flex flex-col gap-5 text-lg leading-relaxed text-ink-2 lg:flex-1">
             <h2
               id="story-title"

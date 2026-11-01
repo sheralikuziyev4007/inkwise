@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { Placeholder } from "@/components/ui/placeholder";
+import { CompanyLogo } from "@/components/ui/company-logo";
+import { DocIllustration } from "@/components/ui/doc-illustration";
+import { companyByName } from "@/lib/sample-data";
 import { cn } from "@/lib/cn";
 import type { CaseStudyMeta, Entry } from "@/lib/content/types";
 
@@ -26,7 +28,11 @@ export function CaseStudyList({ entries }: { entries: Entry<CaseStudyMeta>[] }) 
           className="group on-dark flex flex-wrap items-end justify-between gap-10 rounded-[28px] bg-ink p-8 text-paper no-underline sm:p-12"
         >
           <div className="flex flex-[1_1_480px] flex-col gap-5">
-            <Placeholder label="[CUSTOMER LOGO]" tone="dark" className="h-12 w-44" />
+            <CompanyLogo
+              name={companyByName(featured.meta.company).name}
+              glyph={companyByName(featured.meta.company).glyph}
+              className="text-paper"
+            />
             <h2 className="m-0 font-display text-[clamp(2rem,3.6vw,3.25rem)] leading-[1.02] font-bold tracking-[-0.03em]">
               {featured.meta.title}
             </h2>
@@ -53,6 +59,9 @@ export function CaseStudyList({ entries }: { entries: Entry<CaseStudyMeta>[] }) 
       ) : null}
 
       <div className="flex flex-col gap-6">
+        <p className="m-0 text-sm text-ink-3">
+          Sample case studies — companies and figures are illustrative.
+        </p>
         <div role="group" aria-label="Filter by industry" className="flex flex-wrap gap-2">
           {filters.map((f) => (
             <button
@@ -83,12 +92,23 @@ export function CaseStudyList({ entries }: { entries: Entry<CaseStudyMeta>[] }) 
               >
                 <div
                   className={cn(
-                    "flex h-48 items-center justify-center overflow-hidden font-mono text-xs",
-                    ["bg-paper-2 text-ink-3", "bg-highlight text-ink", "bg-ink text-muted"][i % 3],
+                    "relative flex h-52 items-center justify-center overflow-hidden px-10 pt-6",
+                    ["bg-paper-2", "bg-highlight", "bg-ink"][i % 3],
                   )}
                 >
-                  <span className="transition-transform duration-500 group-hover:scale-105">
-                    [CASE IMAGE]
+                  <DocIllustration
+                    kind={entry.meta.docKind}
+                    tilt={i % 2 ? 3 : -3}
+                    className="w-full max-w-[240px] translate-y-4 transition-transform duration-500 group-hover:translate-y-1 group-hover:scale-[1.03]"
+                  />
+                  <span
+                    className={cn("absolute top-4 left-5", i % 3 === 2 ? "text-paper" : "text-ink")}
+                  >
+                    <CompanyLogo
+                      name={companyByName(entry.meta.company).name}
+                      glyph={companyByName(entry.meta.company).glyph}
+                      className="text-base"
+                    />
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col gap-3 p-6">

@@ -2,6 +2,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/ui/container";
 import { CheckIcon } from "@/components/ui/icons";
 import { SectionHeader } from "@/components/ui/section-header";
+import { homeStats as stats } from "@/lib/sample-data";
 
 import { StrikeList } from "./strike-list";
 
@@ -17,12 +18,6 @@ const after = [
   "Rules route exceptions to the right person",
   "Clean records synced to the systems you already use",
   "Full audit trail for every field, every change",
-];
-
-const stats = [
-  { value: "[STAT]", label: "hours of manual entry saved per week" },
-  { value: "[STAT]", label: "field-level extraction accuracy" },
-  { value: "[STAT]", label: "faster month-end close" },
 ];
 
 export function ProblemSolution() {
@@ -72,6 +67,7 @@ export function ProblemSolution() {
             </div>
           ))}
         </dl>
+        <p className="m-0 mt-3 text-[13px] text-ink-3">Sample figures for a concept product.</p>
       </Container>
     </section>
   );

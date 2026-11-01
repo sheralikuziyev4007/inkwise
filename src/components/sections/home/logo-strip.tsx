@@ -1,17 +1,19 @@
+import { CompanyLogo } from "@/components/ui/company-logo";
 import { Container } from "@/components/ui/container";
-import { Placeholder } from "@/components/ui/placeholder";
+import { sampleCompanies } from "@/lib/sample-data";
 
 export function LogoStrip() {
   return (
-    <section aria-label="Customers" className="pt-6 pb-20">
+    <section aria-labelledby="logos-title" className="pt-6 pb-20">
       <Container>
-        <p className="m-0 mb-5 text-center text-sm text-ink-3">
-          Operations and finance teams at mid-sized companies run on Inkwise
+        <p id="logos-title" className="m-0 mb-6 text-center text-sm text-ink-3">
+          Operations and finance teams at mid-sized companies run on Inkwise{" "}
+          <span className="whitespace-nowrap">(sample customers)</span>
         </p>
-        <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:grid-cols-6">
-          {Array.from({ length: 6 }, (_, i) => (
-            <li key={i}>
-              <Placeholder label="[CUSTOMER LOGO]" className="h-16" />
+        <ul className="m-0 grid list-none grid-cols-2 items-center gap-x-6 gap-y-8 p-0 text-ink-3 sm:grid-cols-3 lg:grid-cols-6">
+          {sampleCompanies.map((company) => (
+            <li key={company.name} className="flex justify-center">
+              <CompanyLogo name={company.name} glyph={company.glyph} />
             </li>
           ))}
         </ul>

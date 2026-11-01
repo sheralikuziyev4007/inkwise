@@ -1,33 +1,44 @@
 import { MotionScene } from "@/components/motion/motion-scene";
+import { DocIllustration } from "@/components/ui/doc-illustration";
 import { cn } from "@/lib/cn";
 
 const cases = [
   {
     title: "Invoices",
+    kind: "invoice",
     fields: "vendor · invoice_no · tax · line_items · total · due_date",
     tone: "highlight",
   },
   {
     title: "Contracts",
+    kind: "contract",
     fields: "parties · term · renewal · notice_period · liability_cap",
     tone: "sheet",
   },
   {
     title: "Purchase orders",
+    kind: "po",
     fields: "po_number · buyer · ship_to · sku · quantity · price",
     tone: "ink",
   },
   {
     title: "Onboarding forms",
+    kind: "form",
     fields: "legal_name · tax_id · bank_details · signatory",
     tone: "sheet",
   },
   {
     title: "Delivery notes",
+    kind: "delivery",
     fields: "carrier · tracking · received_qty · signed_by",
     tone: "paper",
   },
-  { title: "Receipts", fields: "merchant · date · category · vat · amount", tone: "sheet" },
+  {
+    title: "Receipts",
+    kind: "receipt",
+    fields: "merchant · date · category · vat · amount",
+    tone: "sheet",
+  },
 ] as const;
 
 const toneClass: Record<(typeof cases)[number]["tone"], string> = {
@@ -83,13 +94,18 @@ export function UseCases() {
               <li
                 key={item.title}
                 className={cn(
-                  "flex h-[340px] w-[280px] snap-start flex-col justify-between rounded-[var(--radius-card)] p-7 sm:h-[420px] sm:w-[360px] sm:p-8",
+                  "flex h-[400px] w-[280px] snap-start flex-col justify-between gap-4 rounded-[var(--radius-card)] p-7 sm:h-[460px] sm:w-[360px] sm:p-8",
                   toneClass[item.tone],
                 )}
               >
                 <span className={cn("font-mono text-[13px]", item.tone === "ink" && "text-muted")}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
+                <DocIllustration
+                  kind={item.kind}
+                  tilt={i % 2 === 0 ? -4 : 3}
+                  className="mx-auto w-full max-w-[230px] sm:max-w-[260px]"
+                />
                 <div className="flex flex-col gap-3">
                   <h3 className="m-0 font-display text-[34px] leading-[1.02] font-bold tracking-[-0.03em] sm:text-[40px]">
                     {item.title}

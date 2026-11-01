@@ -7,7 +7,9 @@ import { TableOfContents } from "@/components/sections/customers/table-of-conten
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ArrowLeftIcon } from "@/components/ui/icons";
-import { Placeholder } from "@/components/ui/placeholder";
+import { SampleBadge } from "@/components/ui/avatar";
+import { CompanyLogo } from "@/components/ui/company-logo";
+import { companyByName } from "@/lib/sample-data";
 import { getCaseStudies, getCaseStudy, getCaseStudySlugs } from "@/lib/content/loaders";
 
 interface Props {
@@ -59,7 +61,14 @@ export default async function CaseStudyPage({ params }: Props) {
           >
             <ArrowLeftIcon size={16} /> All customers
           </Link>
-          <Placeholder label="[CUSTOMER LOGO]" tone="dark" className="h-13 w-52" />
+          <div className="flex flex-wrap items-center gap-4">
+            <CompanyLogo
+              name={companyByName(meta.company).name}
+              glyph={companyByName(meta.company).glyph}
+              className="text-2xl text-paper"
+            />
+            <SampleBadge className="text-muted">Sample case study</SampleBadge>
+          </div>
           <WordReveal className="h-display m-0 max-w-5xl text-[clamp(2.5rem,5.4vw,4.75rem)] leading-[0.98]">
             {meta.title}
           </WordReveal>
@@ -96,6 +105,10 @@ export default async function CaseStudyPage({ params }: Props) {
         </div>
         <div className="prose-ink max-w-[720px] min-w-0 flex-1">
           <Content />
+          <p className="!mt-12 border-t border-line pt-5 text-sm text-ink-3">
+            Inkwise is a concept brand built for a portfolio project. This customer, its people and
+            its figures are illustrative samples.
+          </p>
         </div>
       </Container>
 

@@ -1,15 +1,17 @@
 export const meta = {
-  title: "[COMPANY] matched [N] purchase orders a month without adding headcount",
+  title: "Hallmere Components matched 91% of purchase orders automatically",
+  company: "Hallmere",
+  docKind: "po",
   summary:
-    "A mid-sized manufacturer automated purchase-order matching across hundreds of suppliers.",
+    "A mid-sized manufacturer automated purchase-order matching across 260 suppliers without adding headcount.",
   industry: "Manufacturing",
   documents: "Purchase orders, invoices",
   stack: "ERP, Data warehouse",
-  teamSize: "[N] employees",
+  teamSize: "780 employees",
   stats: [
-    { value: "[STAT]", label: "POs matched automatically" },
-    { value: "[STAT]", label: "suppliers onboarded" },
-    { value: "[STAT]", label: "hours saved per week" },
+    { value: "91%", label: "POs matched automatically" },
+    { value: "260", label: "suppliers onboarded" },
+    { value: "22 hrs", label: "saved per week" },
   ],
   sections: ["The challenge", "The rollout", "The results"],
   publishedAt: "2026-08-21",
@@ -17,7 +19,7 @@ export const meta = {
 
 ## The challenge
 
-[COMPANY] buys components from more than [N] suppliers. Growth meant more purchase orders, and the procurement team was spending most of its week comparing PDFs line by line.
+Hallmere Components buys parts from more than 260 suppliers. Growth meant more purchase orders, and the procurement team was spending most of its week comparing PDFs line by line.
 
 ## The rollout
 
@@ -25,7 +27,7 @@ Inkwise was connected to the supplier portal and the ERP. Each incoming invoice 
 
 ```json
 {
-  "match": "partial",
+  "match": "full",
   "po_number": "PO-7731",
   "lines": [{ "sku": "A-40", "ordered": 40, "invoiced": 40, "price_delta": "0.00" }],
   "action": "auto_approve"
@@ -34,6 +36,10 @@ Inkwise was connected to the supplier portal and the ERP. Each incoming invoice 
 
 ## The results
 
-[Results paragraph — replace with the customer's verified outcome.]
+Nine out of ten invoices now match their PO without review. The remaining exceptions — mostly partial deliveries — reach the right buyer with the three values side by side, which saves the team about 22 hours a week.
 
-<PullQuote quote="[CUSTOMER QUOTE]" name="[NAME]" role="[ROLE], [COMPANY]" />
+<PullQuote
+  quote="The confidence scores sold it for our auditors. Every number links back to the exact spot on the page."
+  name="Daniel Ruiz"
+  role="Procurement Lead, Hallmere Components"
+/>

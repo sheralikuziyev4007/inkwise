@@ -5,6 +5,10 @@ export interface Stat {
 
 export interface CaseStudyMeta {
   title: string;
+  /** Fictional sample customer (see lib/sample-data.ts). */
+  company: string;
+  /** Illustration shown on cards. */
+  docKind: "invoice" | "contract" | "po" | "form" | "delivery" | "receipt";
   summary: string;
   industry: "Logistics" | "Manufacturing" | "Healthcare";
   documents: string;
