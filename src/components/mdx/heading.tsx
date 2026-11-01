@@ -1,12 +1,7 @@
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 
 import { slugify } from "@/lib/content/slugify";
-
-function textOf(node: ReactNode): string {
-  if (typeof node === "string" || typeof node === "number") return String(node);
-  if (Array.isArray(node)) return node.map(textOf).join("");
-  return "";
-}
+import { textOf } from "@/lib/content/text-of";
 
 /** MDX h2 with a stable id so the table of contents can link to it. */
 export function H2({ children, ...props }: ComponentPropsWithoutRef<"h2">) {
