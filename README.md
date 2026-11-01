@@ -12,7 +12,7 @@ A multi-page marketing website for **Inkwise**, a fictional AI tool that extract
 | ![Pricing page with comparison table](docs/screenshots/pricing-desktop.png)   | ![Mobile navigation menu](docs/screenshots/menu-mobile.png) |
 | ![Case study page rendered from MDX](docs/screenshots/case-study-desktop.png) |                                                             |
 
-**Live demo:** _add your Vercel URL here_
+**Live demo:** [inkwise-zeta.vercel.app](https://inkwise-zeta.vercel.app/)
 
 ---
 
@@ -31,7 +31,7 @@ A multi-page marketing website for **Inkwise**, a fictional AI tool that extract
 
 ## Features
 
-**Pages:** Home, Features, Pricing, Customers (list + MDX case studies), Blog (list + MDX articles), About, Contact and a branded 404.
+**Pages:** Home, Features, Pricing, Customers (list + MDX case studies), Blog (list + MDX articles), About, Contact, Privacy notice and a branded 404.
 
 **Motion**
 
@@ -47,7 +47,8 @@ A multi-page marketing website for **Inkwise**, a fictional AI tool that extract
 
 - Monthly/yearly billing toggle, plan comparison table, FAQ accordion
 - Blog search and topic filter, reading-progress bar, table of contents, copyable code blocks
-- Contact form with validation, submitting, success and error states. Nothing is sent; use an address ending in `@fail.test` to see the error state.
+- Contact form with validation, submitting, success and error states, plus a consent checkbox linked to the privacy notice. Nothing is sent; use an address ending in `@fail.test` to see the error state.
+- Newsletter signup with inline validation that is announced to screen readers
 - SEO: per-page metadata and canonical URLs, generated Open Graph images (per page and per MDX entry), `sitemap.xml`, `robots.txt`, JSON-LD (Organization, WebSite, FAQPage, BlogPosting)
 
 ## Getting started
@@ -112,6 +113,7 @@ docs/screenshots/           # README media
 - **Leak-free route changes.** Every animation goes through one hook, `useMotion`, which runs inside `gsap.context()` + `gsap.matchMedia()` scoped to its component. Unmounting (or a breakpoint or motion-preference change) reverts all tweens, ScrollTriggers and pin spacers. An e2e test navigates between routes and asserts that no pin spacers or runtime errors remain.
 - **Server Components for markup, tiny controllers for motion.** Animated home sections stay Server Components; a render-less `<MotionScene scene="howItWorks" target="how-it-works" />` attaches the matching setup from `lib/motion/scenes.ts`. React doesn't ship or run component code for the section markup itself.
 - **Reduced motion is a first-class path.** An inline script adds `motion-ok` to `<html>` only when motion is allowed. Every pre-hidden state is scoped to that class, with a CSS fallback that reveals content if JavaScript never runs.
+- **Light theme only, on purpose.** The brand is built on "ink on paper" with a highlighter accent, and the marker metaphor depends on that contrast. Dark surfaces are used as sections (hero panels, 404, mobile menu) instead of a site-wide dark mode, which keeps a single, fully tested colour system.
 - **Native platform first.** The mobile menu uses `<dialog>` (focus trap and Escape for free), the accordion uses ARIA disclosure buttons with CSS grid-row height easing, toggles use `aria-pressed`, and tables keep sticky row headers inside a focusable scroll region.
 - **Content as data.** MDX files export a typed `meta` object, so list pages, tables of contents, OG images, sitemap entries and JSON-LD are all generated from the same source.
 - **Frontend only.** There is no backend; the contact form resolves through a fake `submitContact` with a configurable failure case, so every UI state can be demoed and tested.
@@ -120,17 +122,27 @@ docs/screenshots/           # README media
 
 Measured locally on production builds:
 
-| Check                                                                           | Result                                                                                                                                            |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Lighthouse, desktop (Home, Features, Pricing, case study, Blog, About, Contact) | Performance 100 · Accessibility 100 · Best Practices 100 · SEO 100                                                                                |
-| Lighthouse, mobile (simulated slow 4G + 4× CPU)                                 | Accessibility 100 · Best Practices 100 · SEO 100; Performance 78–87 in a shared 2-core container — re-check on PageSpeed Insights after deploying |
-| Unit/component tests                                                            | 38 passing                                                                                                                                        |
-| End-to-end tests                                                                | Chromium + mobile passing locally; Firefox and WebKit run in CI                                                                                   |
-| axe-core (WCAG 2.1 AA)                                                          | No serious or critical violations on key pages                                                                                                    |
+| Check                                                                           | Result                                                                                                                                                 |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Lighthouse, desktop (Home, Features, Pricing, case study, Blog, About, Contact) | Performance 100 · Accessibility 100 · Best Practices 100 · SEO 100                                                                                     |
+| Lighthouse, mobile (simulated slow 4G + 4× CPU)                                 | Accessibility 100 · Best Practices 100 · SEO 100; Performance 85–95 on Home in a shared container (varies run to run) — re-check on PageSpeed Insights |
+| Unit/component tests                                                            | 55 passing                                                                                                                                             |
+| End-to-end tests                                                                | Chromium + mobile passing locally; Firefox and WebKit run in CI                                                                                        |
+| axe-core (WCAG 2.1 AA)                                                          | No serious or critical violations on key pages                                                                                                         |
+
+## My contribution and problems solved
+
+I designed and built the whole project on my own: visual language, page layouts, components, motion, content model, tests, CI and deployment. These are the problems that took the most work:
+
+- **Rich animation without hurting Core Web Vitals.** The first version loaded GSAP during hydration and held back the largest contentful paint. I moved headline reveals to CSS on server-split text and code-split GSAP. Scenes below the fold, and the hero document on mobile, now load it only when the browser is idle. Mobile Total Blocking Time dropped from about 500 ms to about 200–300 ms, and desktop scores 100.
+- **Animations leaking between routes.** Pinned ScrollTriggers left spacer elements and stale triggers after client-side navigation. Every animation now goes through one hook (`useMotion`) that scopes and reverts its own context. An end-to-end test navigates between routes and fails if any pin spacer or runtime error remains.
+- **Reduced motion as a real path, not an afterthought.** For visitors who prefer reduced motion, the GSAP and Lenis code is never downloaded, and every section renders in its final state. Content still shows if JavaScript fails, thanks to a CSS fallback.
+- **One source of truth for content.** MDX files export typed metadata that feeds list pages, tables of contents, OG images, the sitemap and JSON-LD. A unit test checks that each table of contents matches the article's headings, so links can't silently break.
+- **Accessibility checked automatically.** axe-core runs on every key page in CI, alongside keyboard tests for the skip link, mobile menu, accordion and forms.
 
 ## Deployment
 
-The site is fully static and deploys to Vercel with zero configuration. Set `NEXT_PUBLIC_SITE_URL` to the production URL so canonical links, Open Graph images and the sitemap point to the right domain.
+Live at **[inkwise-zeta.vercel.app](https://inkwise-zeta.vercel.app/)**. The site is fully static and deploys to Vercel with zero configuration. Set `NEXT_PUBLIC_SITE_URL` to the production URL so canonical links, Open Graph images and the sitemap point to the right domain. If it is not set, the Vercel production domain is used automatically.
 
 ---
 
