@@ -14,7 +14,7 @@ A multi-page marketing website for **Inkwise**, a fictional AI tool that extract
 
 ## Live Demo
 
-- 🌐 **Website:** https://your-project.vercel.app
+- 🌐 **Website:** https://inkwise-zeta.vercel.app
 - 🎬 **Video walkthrough:** https://youtu.be/6TthyjUtT3U
 
 [![Watch the demo video](https://img.youtube.com/vi/6TthyjUtT3U/maxresdefault.jpg)](https://youtu.be/6TthyjUtT3U)
